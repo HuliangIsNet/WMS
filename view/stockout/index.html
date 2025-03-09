@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>出库管理</title>
+    <meta id="i18n_pagename" content="stockoutquery-common" />
+    <link rel="stylesheet" href="../../component/pear/css/pear.css" />
+    <link rel="stylesheet" href="../../admin/css/other/department.css" />
+    <style>
+        .layui-form .layui-table-cell {
+            height: 50px !important;
+            line-height: 50px !important;
+            overflow: visible !important;
+        }
+
+
+        .layui-table-view .layui-table th {
+            overflow: hidden;
+        }
+
+        .layui-form-selectup dl {
+            top: 42px;
+            bottom: unset;
+        }
+    </style>
+</head>
+
+<body class="pear-container">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md2">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <div class="layui-inline">
+                        <input type="text" class="layui-input" autocomplete="off" oninput="window.QueryTree(this)"
+                            onblur="window.QueryTree(this)" />
+                    </div>
+                    <div id="productTreeContent" style="overflow: auto;padding-top: 10px;">
+                        <ul id="productTree" class="dtree organizationTree" data-id="9527"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md10">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <table id="stockin-table" lay-filter="stockin-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/html" id="stockin-toolbar">
+        <!--<input type="checkbox" id="isAuto" name="isAuto" lay-event="auto" title="自动运行">
+        <input type="checkbox" id="isUrgent" name="isUrgent" lay-event="urgent" title="加急" >-->
+    <!-- &nbsp;&nbsp;&nbsp;&nbsp; -->
+    <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add" data-i18n-text="确认添加出库单">
+
+    </button>
+    </script>
+    <script src="../../component/preview/js/jquery.js"></script>
+    <script src="../../component/i18n/jquery.i18n.properties.js"></script>
+    <script src="../../component/layui/layui.js"></script>
+    <script src="../../component/pear/pear.js"></script>
+    <script>
+        layui.use(['table', 'form', 'jquery', 'dtree', 'common', 'apis', 'lang'], function () {
+            let table = layui.table;
+            let form = layui.form;
+            let $ = layui.jquery;
+            let dtree = layui.dtree;
+            let common = layui.common;
+            let apis = layui.apis;
+            let lang = layui.lang;
+            let MODULE_PATH = "operate/";
+            lang.render();
+            //屏幕可工作区域高度
+            var height = window.screen.availHeight - 290;
+            let cols = [
+                [{
+                    type: 'checkbox', LAY_CHECKED: true
+                },
+                {
+                    title: $.i18n.prop('物料名称'),
+                    field: 'materialName',
+                    width: 150,
+                    align: 'center'
+                },
+                {
+                    title: $.i18n.prop('物料代码'),
+                    field: 'materialCode',
+                    width: 150,
+                    align: 'center'
+                },
+                {
+                    title: $.i18n.prop('产品总库存'),
+                    field: 'productTotal',
+                    width: 120,
+                    align: 'center'
+                },
+                {
+                    title: $.i18n.prop('物料库存'),
+                    field: 'materialTotal',
+                    width: 80,
+                    align: 'center'
+                },
+
+                {
+                    title: $.i18n.prop('数量'),
+                    align: 'center',
+                    width: 120,
+                    templet: function (d) {
+                        var html = "<input type='number'  name='count' data-id='" + d.materialId + "' class='layui-input' oninput='window.Count(this)' onblur='window.QuantityBlur(this)' value='" + d.quantity + "'></input>";
+                        return html;
+                    }
+                },
+                {
+                    title: $.i18n.prop('货柜'),
+                    align: 'center',
+                    width: 150,
+                    templet: function (d) {
+                        var html = "<select name='containerId' lay-filter='containerId'  data-id='" + d.materialId + "'><option value='0'>"+$.i18n.prop('货柜')+"</option>";
+                        layui.each(d.containerlist, function (i, item) {
+                            html += "<option value='" + item.item1 + "' " + (item.item1 == d.containerId ? 'selected' : ' ') + "   >" + item.item2 + "</option>";
+                        });
+                        html += "</select>";
+                        return html;
+                    }
+                }
+                    ,
+                {
+                    title: $.i18n.prop('工作台'),
+                    align: 'center',
+                    width: 150,
+                    templet: function (d) {
+                        html = "<select name='workBenchId' lay-filter='workBenchId'  data-id='" + d.materialId + "'><option value='0'>"+$.i18n.prop('工作台')+"</option>";
+                        if (d.list_WorkBench.length != 0) {
+                            layui.each(d.list_WorkBench, function (i, item) {
+                                html += "<option value='" + item.id + "' " + (item.id == d.workBenchId ? 'selected' : ' ') + "   >" + item.name + "</option>";
+                            });
+                        }
+                        html += "</select>";
+
+                        return html;
+                    }
+                },
+                {
+                    title: $.i18n.prop('托盘'),
+                    align: 'center',
+                    width: 120,
+                    templet: function (d) {
+
+                        html = "<select name='hopperId' lay-filter='hopperId'  data-id='" + d.materialId + "' lay-search><option value='0'>"+$.i18n.prop('托盘')+"</option>";
+                        if (d.hopperList.length != 0) {
+                            layui.each(d.hopperList, function (i, item) {
+                                html += "<option value='" + item.id + "' " + (item.id == d.hopperId ? 'selected' : ' ') + "   >" + item.name + "</option>";
+                            });
+                        }
+                        html += "</select>";
+
+                        return html;
+                    }
+                },
+
+                {
+                    title: $.i18n.prop('批次'),
+                    align: 'center',
+                    width: 200,
+                    templet: function (d) {
+                        var html = "";
+                        html = "<select id='batchCode_" + d.materialId + "' name='batchCode' lay-filter='batchCode'  data-id='" + d.materialId + "' lay-search><option value=''>"+$.i18n.prop('批次')+"</option>";
+                        layui.each(d.batchcodelist, function (i, item) {
+                            html += "<option value='" + item.item1 + "' " + (item.item1 == d.batchCode ? 'selected' : ' ') + "   >" + item.item1 + "(" + item.item2 + ")" + "</option>";
+                        });
+                        html += "</select>";
+                        return html;
+                    }
+                }
+                    ,
+
+                {
+                    title: $.i18n.prop('合格证'),
+                    align: 'center',
+                    width: 200,
+                    templet: function (d) {
+                        var html = "";
+                        html = "<select id='certificateCode_" + d.materialId + "' name='certificateCode' lay-filter='certificateCode'  data-id='" + d.materialId + "' lay-search><option value=''>"+$.i18n.prop('合格证')+"</option>";
+                        layui.each(d.certificatecodelist, function (i, item) {
+                            html += "<option value='" + item.item1 + "' " + (item.item1 == d.certificateCode ? 'selected' : ' ') + "   >" + item.item1 + "(" + item.item2 + ")" + "</option>";
+                        });
+                        html += "</select>";
+                        return html;
+                    }
+                }
+
+                    ,
+
+                {
+                    title: $.i18n.prop('保管期'),
+                    align: 'center',
+                    width: 200,
+                    templet: function (d) {
+                        var html = "";
+                        html = "<select id='periodDate_" + d.materialId + "' name='periodDate' lay-filter='periodDate'  data-id='" + d.materialId + "' lay-search><option value=''>"+$.i18n.prop('保管期')+"</option>";
+                        layui.each(d.perioddatelist, function (i, item) {
+                            html += "<option value='" + item.item1 + "' " + (item.item1 == d.periodDate ? 'selected' : ' ') + "   >" + item.item1 + "(" + item.item2 + ")" + "</option>";
+                        });
+                        html += "</select>";
+                        return html;
+                    }
+                }
+
+                    ,
+
+                {
+                    title: $.i18n.prop('供应商'),
+                    align: 'center',
+                    width: 200,
+                    templet: function (d) {
+                        var html = "";
+                        html = "<select id='manufacturers_" + d.materialId + "' name='manufacturers' lay-filter='manufacturers'  data-id='" + d.materialId + "' lay-search><option value=''>"+$.i18n.prop('供应商')+"</option>";
+                        layui.each(d.manufacturerslist, function (i, item) {
+                            html += "<option value='" + item.item1 + "' " + (item.item1 == d.manufacturers ? 'selected' : ' ') + "   >" + item.item1 + "(" + item.item2 + ")" + "</option>";
+                        });
+                        html += "</select>";
+                        return html;
+                    }
+                }
+
+                ]
+            ]
+
+            var DTree = dtree.render({
+                elem: "#productTree",
+                request: { hasInventory: true },
+                initLevel: "2", //默认展开层级为1
+                line: true, // 有线树
+                ficon: ["1", "-1"], // 设定一级图标样式。0表示方形加减图标，8表示小圆点图标
+                icon: ["0", "2"], // 设定二级图标样式。0表示文件夹图标，5表示叶子图标
+                method: 'get',
+                height: height,
+                dataStyle: 'layuiStyle',
+                // response: {
+                //     title: "productName",
+                //     parentId: "pid",
+                //     statusCode: 200
+                // },
+                response: {
+                    title: "code",
+                    statusCode: 200
+                },
+                url: apis.GetProductTree
+            });
+            //树节点查询
+            window.QueryTree = function (obj) {
+                DTree.fuzzySearch($(obj).val());
+            }
+            var table_data = [];
+            var current_Product;
+            var scrollTop = 0;
+            var scrollLeft = 0;
+            table.render({
+                id: 'stockin_table',
+                elem: '#stockin-table',
+                data: table_data,
+                height: height + 23,
+                cols: cols,
+                limit: 999,
+                skin: 'line',
+                text:{none:$.i18n.prop("无数据")},
+                toolbar: '#stockin-toolbar',
+                defaultToolbar: [],
+                done: function (res, curr, count) {
+                    // if (count == 0) {
+                    //     // $('.layui-table-box').css('overflow', 'auto');
+                    //     // $('.layui-table-box').css('overflow-y', 'hidden');
+                    //     // $('.layui-table-header').css('overflow', 'visible');
+
+
+                    // } else {
+                    //     $('.layui-table-header').css('overflow', 'hidden');
+
+                    //     $('.layui-table-main').scrollTop(scrollTop);
+                    //     $('.layui-table-main').scrollLeft(scrollLeft);
+
+                    //执行一个laydate实例
+                    // laydate.render({
+                    //     elem: '.periodDate' //指定元素,
+                    //     , format: 'yyyy-MM-dd'
+                    //     , done: function (value, date) {
+                    //         console.log($(date).parent().html());
+                    //     }
+                    // });
+                    // res.data.forEach(element => {
+                    //     tableSelect.render({
+                    //         width: 300,
+                    //         height: 300,
+                    //         elem: '#inset_' + element.materialId,
+                    //         checkedKey: 'trayId', //表格的唯一建值，非常重要，影响到选中状态 必填
+                    //         searchType: 'more', //开启多条件搜索
+                    //         searchList: [
+                    //             { searchKey: 'containerName', searchPlaceholder: '货柜名称' }, //搜索条件1
+                    //             { searchKey: 'hopperName', searchPlaceholder: '料斗名称' }, //搜索条件1
+                    //             { searchKey: 'trayName', searchPlaceholder: '料盒名称' },  //搜索条件2
+                    //         ],
+                    //         toolBack: function (obj) {
+                    //         },
+                    //         table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
+                    //             url: apis.GetHopperTrayPageList,
+                    //             page: true,
+                    //             cols: [[
+                    //                 { type: 'radio' },
+                    //                 { field: 'containerName', title: '货柜', width: 100 },
+                    //                 { field: 'hopperName', title: '料斗', width: 100 },
+                    //                 { field: 'trayName', title: '料盒名称', width: 100 },
+                    //                 {
+                    //                     title: '数量', width: 100, toolbar: '#test-dropdown-toolbar-barDemo'
+                    //                 },
+                    //             ]],
+                    //             request: {
+                    //                 pageName: 'pageIndex',//页码的参数名称，默认：page
+                    //                 limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                    //             },
+                    //             response: {
+                    //                 statusCode: "200"
+                    //             }
+                    //         },
+                    //         done: function (elem, data) {
+
+                    //             data = data.data;
+                    //             if (data.length > 0) {
+                    //                 //选择完后的回调，包含2个返回值 elem:返回之前input对象；data:表格返回的选中的数据 []
+                    //                 //拿到data[]后 就按照业务需求做想做的事情啦~比如加个隐藏域放ID...
+                    //                 if (splitstate) {
+                    //                     var materialId = $(elem).data('id');
+                    //                     var find_data = table_data.find(x => x.materialId == materialId);
+                    //                     find_data.containerId = data[0].containerId;
+                    //                     find_data.containerName = data[0].containerName;
+                    //                     find_data.hopperId = data[0].hopperId;
+                    //                     find_data.hopperName = data[0].hopperName;
+                    //                     find_data.trayId = data[0].trayId;
+                    //                     find_data.trayName = data[0].trayName;
+                    //                 }
+                    //                 else {
+                    //                     table_data.forEach(element => {
+                    //                         element.containerId = data[0].containerId;
+                    //                         element.containerName = data[0].containerName;
+                    //                         element.hopperId = data[0].hopperId;
+                    //                         element.hopperName = data[0].hopperName;
+                    //                         element.trayId = data[0].trayId;
+                    //                         element.trayName = data[0].trayName;
+                    //                     });
+                    //                 }
+
+                    //                 window.refresh({ data: table_data });
+                    //             }
+                    //         }
+                    //     });
+                    // });
+
+                    //}
+                    $('.layui-table-box').css('overflow', 'auto');
+                    if (count == 0) {
+                        $('.layui-table-box').css('overflow-y', 'hidden');
+                    }
+                    $('.layui-table-header').css('overflow', 'visible');
+                    $('.layui-table-body').css('overflow', 'visible');
+
+                    //定位位置
+                    $('.layui-table-box').scrollTop(scrollTop);
+                    $('.layui-table-box').scrollLeft(scrollLeft);
+
+                    lang.render();
+                }
+            });
+            table.on('toolbar(stockin-table)', function (obj) {
+                if (obj.event === 'add') {
+                    window.add();
+                } else if (obj.event === 'refresh') {
+                    window.refresh();
+                } else if (obj.event === 'batchRemove') {
+                    window.batchRemove(obj);
+                }
+            });
+            window.Count = function (obj) {
+                var materialId = $(obj).data('id');
+                productQuantity = $(obj).val();
+                if (current_Product.isKeepRatio) {
+                    table_data.forEach(element => {
+                        element.quantity = productQuantity * element.ratio;
+                    });
+                }
+                else {
+                    var data = table_data.find(x => x.materialId == materialId);
+                    data.quantity = productQuantity;
+                }
+
+            };
+
+
+            window.QuantityBlur = function (obj) {
+                window.refresh({ data: table_data });
+            };
+            var productId;
+            var productQuantity = 0;
+            // 绑定节点点击事件
+            dtree.on("node(productTree)", function (obj) {
+                if (obj.param.nodeId != null || obj.param.nodeId != undefined) {
+                    productId = obj.param.nodeId;
+                    window.GetMaterialList();
+                }
+                if (!obj.param.leaf) {
+                    var $div = obj.dom;
+                    DTree.clickSpread($div); //调用内置函数展开节点
+                }
+            });
+
+            //containerId
+            window.GetMaterialList = function () {
+                //table_data = [];
+                common.get(function (res) {
+                    current_Product = res.item1;
+                    layui.each(res.item3, function (i, item) {
+                        table_data.push({
+                            productId: productId,
+                            billType: 2,
+                            materialId: item.item1.materialId,
+                            materialName: item.item1.materialName,
+                            materialCode: item.item1.materialCode,
+                            materialSpec: item.item1.materialSpec,
+                            materialGrade: item.item1.materialGrade,
+                            productTotal: res.item2,
+                            materialTotal: item.item2,
+                            ratio: item.item1.ratio,
+                            quantity: 1 * item.item1.ratio,
+                            containerlist: item.item3,
+                            containerId: 0,
+                            list_WorkBench: '',
+                            workBenchId: 0,
+                            hopperList: '',
+                            hopperId: 0,
+                            batchcodelist: item.item4,
+                            batchCode: '',
+                            certificatecodelist: item.item5,
+                            certificateCode: '',
+                            perioddatelist: item.item6,
+                            periodDate: '',
+                            manufacturerslist: item.item7,
+                            manufacturers: ''
+                        });
+                    });
+                    window.refresh({ data: table_data });
+                }, apis.GetProductAndBomDto, { productId: productId });
+            };
+
+
+            window.OpenExecView = function (data) {
+                var backBill = []
+                $.each(data, function (i, item) {
+                    if (item.item1.isBackGroundRunMode) {
+                        backBill.push(item);
+                    }
+                });
+                if (backBill == null || backBill.length <= 0) return;
+                var list_bill_ids = [];
+                backBill.forEach(x => {
+                    list_bill_ids.push(x.item1.id);
+                }
+                );
+                layer.open({
+                    type: 2,
+                    title: '任务执行',
+                    shade: 0.1,
+                    area: ['1200px', '420px'],
+                    content: '/view/taskexec/execview.html?list_bill_ids=' + list_bill_ids
+                });
+            }
+            window.add = function () {
+                var checkStatus = table.checkStatus('stockin_table');
+                var data = checkStatus.data;
+                if (checkData(checkStatus.data)) {
+                    //window.BindTray(data);
+                    window.SubmitBill(data);
+                }
+            };
+            //料盒id
+            var trayId;
+            //接驳位置
+            var converorLocation;
+            window.BindTray = function (data) {
+                layer.open({
+                    type: 2,
+                    title: '绑定料盒',
+                    shade: 0.1,
+                    area: ['800px', '420px'],
+                    btn: ['确定', '取消'],
+                    content: '/view/stockout/bindtray.html?height=' + 420,
+                    yes: function (index, layero) {
+                        var body = layer.getChildFrame('body', index);
+                        //料盒id
+                        var trayId = body.find('#trayId').val();
+                        //接驳位置
+                        var converorLocation = body.find('#converorLocation').val();;
+                        //料盒id
+                        data.forEach(x => {
+                            x.trayId == trayId;
+                            x.converorLocation == converorLocation;
+                        });
+
+                        layer.close(index);
+                        window.SubmitBill(data);
+                    }
+                });
+            }
+            window.SubmitBill = function (data) {
+               
+                common.post(function (res) {
+                    layer.msg($.i18n.prop("添加出库成功"), {
+                        icon: 1, time: 2000, end: function () {
+                            table_data = [];
+                            table.reload("stockin_table", {
+                                data: table_data
+                            });
+                            common.post(function () { }, apis.PublishBill, res);
+
+                            window.OpenExecView(res);
+                        }
+                    });
+                }, apis.AddBill, { data: JSON.stringify(data)});
+            }
+            function checkData(data) {
+                var isGo = true;
+                if (table_data == null || table_data.length == 0) {
+                    layer.alert("请先选择要出库的产品信息", { icon: 2 });
+                    isGo = false;
+
+                }
+                else if (data == null || data.length == 0) {
+                    layer.alert("请勾选要出库的物料信息", { icon: 2 });
+                    isGo = false;
+                }
+                else {
+                    for (var i = 1; i <= data.length; i++) {
+
+                        if (data[i - 1].count == 0) {
+                            layer.alert("请输入第" + i + "行出库库数量！", { icon: 2 });
+                            isGo = false;
+                            break;
+                        }
+                        if (data[i - 1].isKeepRatio) {
+                            if (data[i - 1].quantity > data[i - 1].productTotal) {
+                                layer.alert("第" + i + "行出库库数量大于最大库存！", { icon: 2 });
+                                isGo = false;
+                                break;
+                            }
+                        }
+                        else {
+                            if (data[i - 1].quantity > data[i - 1].materialTotal) {
+                                layer.alert("第" + i + "行出库库数量大于最大库存！", { icon: 2 });
+                                isGo = false;
+                                break;
+                            }
+                        }
+
+                    }
+                }
+                return isGo;
+            };
+            var containerId;
+            form.on("select(containerId)", function (data) {
+
+                table_data.forEach(element => {
+                    element.containerId = data.value;
+                    element.hopperList = window.GetHopperList(data.value);
+                    element.list_WorkBench = window.GetWorkBenchList(data.value);
+                });
+                containerId = data.value;
+                window.refresh();
+            });
+            var hopperId;
+            form.on("select(hopperId)", function (data) {
+                table_data.forEach(element => {
+                    element.hopperId = data.value;
+                });
+                hopperId = data.value;
+                window.refresh();
+            });
+            var workBenchId;
+            form.on("select(workBenchId)", function (data) {
+                table_data.forEach(element => {
+                    element.workBenchId = data.value;
+                });
+                hopperId = data.value;
+                window.refresh();
+            });
+            window.GetWorkBenchList = function (containerId) {
+                var list_WorkBench;
+                common.get(function (data) {
+                    list_WorkBench = data;
+                }, apis.GetWorkBenchList, { containerId: containerId });
+                return list_WorkBench;
+            }
+            window.GetHopperList = function (containerId) {
+                var list_Hopper;
+                common.get(function (data) {
+                    list_Hopper = data;
+                }, apis.GetHopperList, { containerId: containerId, productId: productId });
+                return list_Hopper;
+            }
+            window.GetData = function () {
+                table_data.forEach(element => {
+                    element.batchCode = common.isNull($("#batchCode_" + element.materialId).val()) ? '' : $("#batchCode_" + element.materialId).val();
+                    element.certificateCode = common.isNull($("#certificateCode_" + element.materialId).val()) ? '' : $("#certificateCode_" + element.materialId).val();
+                    element.periodDate = common.isNull($("#periodDate_" + element.materialId).val()) ? '' : $("#periodDate_" + element.materialId).val();
+                    element.manufacturers = common.isNull($("#manufacturers_" + element.materialId).val()) ? '' : $("#manufacturers_" + element.materialId).val();
+                });
+            }
+            window.refresh = function (param) {
+                GetData();
+                var layuiTable = $('.layui-table-box');
+                if (layuiTable != null && layuiTable.length > 0) {
+                    scrollTop = layuiTable[0].scrollTop;
+                    scrollLeft = layuiTable[0].scrollLeft;
+                }
+                table.reload('stockin_table', param);
+            }
+        })
+    </script>
+</body>
+
+</html>

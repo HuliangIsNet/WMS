@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta id="i18n_pagename" content="layout-common" />
+    <title>添加布局</title>
+    <meta id="i18n_pagename" content="layout-common" />
+    <link rel="stylesheet" href="/component/pear/css/pear.css" />
+    <style>
+        .layui-form .layui-table-box .layui-table-body {
+            overflow-x: hidden !important;
+        }
+
+        .layui-form .layui-table-box .layui-table-body .layui-table-cell {
+            height: 50px !important;
+            line-height: 50px !important;
+            overflow: visible;
+        }
+    </style>
+</head>
+
+<body>
+    <form class="layui-form" lay-filter="wms-form" action="javascript:void(0);"
+        onkeydown="if(event.keyCode==13)return false;">
+        <div class="mainBox">
+            <div class="main-container">
+                <div class="layui-form-item">
+                    <div class=" layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="布局名称"></label>
+                        <div class="layui-input-block">
+                            <input type="text" data-i18n-placeholder="布局名称" name="name" class="layui-input"
+                                lay-verify="required|checkName" />
+                        </div>
+                    </div>
+                    <div class="layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="是否默认"></label>
+                        <div class="layui-input-block">
+                            <input type='checkbox' name='isDefault' lay-filter='isDefault' lay-skin='switch'
+                                lay-text='是|否' />
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <table id="wms-table" lay-filter="wms-table"></table>
+                </div>
+
+            </div>
+        </div>
+        <div class="bottom">
+            <div class="button-container">
+                <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit lay-filter="formSubmit">
+                    <i class="layui-icon layui-icon-ok"></i>
+                    <span data-i18n-text="提交"></span>
+
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <script type="text/html" id="table-toolbar">
+        <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
+            <i class="layui-icon layui-icon-add-1"></i>
+            <span data-i18n-text="新增一行"></span>
+
+           
+        </button>
+        <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="remove">
+            <i class="layui-icon layui-icon-delete"></i>
+            <span data-i18n-text="删除一行"></span>
+
+            
+        </button>
+    </script>
+    <script src="/component/preview/js/jquery.js"></script>
+    <script src="/component/i18n/jquery.i18n.properties.js"></script>
+    <script src="/component/layui/layui.js"></script>
+    <script src="/component/pear/pear.js"></script>
+    <script src="/component/preview/js/jquery.js"></script>
+    <script src="/component/i18n/jquery.i18n.properties.js"></script>
+    <script>
+        layui.use(['form', 'element', 'jquery', 'common', 'apis', 'table', 'lang'], function () {
+            var $ = layui.$,
+                form = layui.form,
+                common = layui.common,
+                apis = layui.apis,
+                laydate = layui.laydate,
+                layer = layui.layer
+
+
+            table = layui.table;
+            let lang = layui.lang;
+            lang.render();
+            form.render();
+            ///明细
+            var detailData = [];
+            let cols = [
+                [
+                    {
+                        title: $.i18n.prop('编号'),
+                        align: 'center',
+                        templet: function (d) {
+                            var html = "<input type='number' id='no_" + d.id + "'  class='layui-input' value='" + d.no + "'/>";
+                            return html;
+                        }
+                    },
+                    {
+                        title: $.i18n.prop('名称'),
+                        align: 'center',
+                        templet: function (d) {
+                            var html = "<input type='text' id='name_" + d.id + "' class='layui-input' value='" + d.name + "' />";
+                            return html;
+                        }
+                    },
+                    {
+                        title: $.i18n.prop('开始列'),
+                        align: 'center',
+                        templet: function (d) {
+                            var html = "<input type='number' id='column_" + d.id + "' class='layui-input' value='" + d.column + "' />";
+                            return html;
+                        }
+                    },
+                    {
+                        title: $.i18n.prop('跨列'),
+                        align: 'center',
+                        templet: function (d) {
+                            var html = "<input type='number'  id='colSpan_" + d.id + "' class='layui-input' value='" + d.colSpan + "' />";
+                            return html;
+                        }
+                    },
+                    {
+                        title: $.i18n.prop('开始行'),
+                        align: 'center',
+                        templet: function (d) {
+                            var html = "<input type='number'id='row_" + d.id + "' class='layui-input' value='" + d.row + "'/>";
+                            return html;
+                        }
+                    },
+                    {
+                        title: $.i18n.prop('跨行'),
+                        align: 'center',
+                        templet: function (d) {
+                            var html = "<input type='number' id='rowSpan_" + d.id + "' class='layui-input' value='" + d.rowSpan + "' />";
+                            return html;
+                        }
+                    },
+                    {
+                        title: $.i18n.prop('料盒类型'),
+                        align: 'center',
+                        width: 150,
+                        templet: function (d) {
+                            var html = '';
+                            if (d.listTrayType.length == 0) {
+                                html = $.i18n.prop('不存在料盒类型');
+                            }
+                            else {
+                                html = "<select id='trayTypeId_" + d.id + "' class='layui-select' >";
+                                layui.each(d.listTrayType, function (i, item) {
+                                    html += "<option value='" + item.id + "' " + (item.id == d.trayTypeId ? 'selected' : ' ') + "   >" + item.name + "</option>";
+                                });
+                                html += "</select>";
+                            }
+                            return html;
+                        }
+                    },
+                    {
+                        title: $.i18n.prop('运行距离(X)'),
+                        align: 'center',
+                        width: 120,
+                        templet: function (d) {
+                            var html = "<input type='number' did='runOffSet_X_" + d.id + "' class='layui-input' value='" + d.runOffSet_X + "' />";
+                            return html;
+                        }
+                    },
+                    {
+                        title: $.i18n.prop('运行高度(Y)'),
+                        align: 'center',
+                        width: 120,
+                        templet: function (d) {
+                            var html = "<input type='number' id='runOffSet_Y_" + d.id + "' class='layui-input' value='" + d.runOffSet_Y + "' />";
+                            return html;
+                        }
+                    },
+                    {
+                        title: $.i18n.prop('AGV地址'),
+                        align: 'center',
+                        templet: function (d) {
+                            var html = "<input type='text'id='agvLocation_" + d.id + "' class='layui-input' value='" + d.agvLocation + "' />";
+                            return html;
+                        }
+                    }
+                ]
+            ]
+            table.render({
+                elem: '#wms-table',
+                data: detailData,
+                cols: cols,
+                skin: 'line',
+                text: { none: $.i18n.prop('无数据') },
+                height: 400,
+                limit: 999,
+                toolbar: '#table-toolbar',
+                defaultToolbar: [],
+
+
+            });
+
+
+            var list_TrayType;
+            common.get(function (data) {
+                list_TrayType = data;
+
+            }, apis.GetTrayTypeList);
+            table.on('toolbar(wms-table)', function (obj) {
+                if (obj.event === 'add') {
+                    window.add();
+                } else if (obj.event === 'remove') {
+                    window.remove();
+                }
+            });
+            lang.render();
+
+            var index = 1;
+            var column = 0;
+            window.add = function () {
+                console.log(index);
+                detailData.push({
+                    id: index,
+                    no: index,
+                    name: index,
+                    column: column,
+                    row: 1,
+                    colSpan: 1,
+                    rowSpan: 1,
+                    listTrayType: list_TrayType,
+                    trayTypeId: 0,
+                    agvLocation: '',
+                    runOffSet_Y: 0,
+                    runOffSet_X: 0
+                });
+                index++;
+                column++;
+
+                window.refresh();
+
+            };
+            window.remove = function () {
+                detailData.splice(index - 2, 1);
+                index--;
+                window.refresh();
+            };
+            window.refresh = function (param) {
+                GetData();
+                table.reload('wms-table', {
+                    data: detailData
+
+                });
+                lang.render();
+            };
+            window.GetData = function () {
+                detailData.forEach(element => {
+                    element.no = common.isNull($("#no_" + element.id).val()) ? element.no : $("#no_" + element.id).val(),
+                        element.name = common.isNull($("#name_" + element.id).val()) ? element.name : $("#name_" + element.id).val(),
+                        element.column = common.isNull($("#column_" + element.id).val()) ? element.column : $("#column_" + element.id).val(),
+                        element.row = common.isNull($("#row_" + element.id).val()) ? element.row : $("#row_" + element.id).val(),
+                        element.colSpan = common.isNull($("#colSpan_" + element.id).val()) ? element.colSpan : $("#colSpan_" + element.id).val(),
+                        element.rowSpan = common.isNull($("#rowSpan_" + element.id).val()) ? element.rowSpan : $("#rowSpan_" + element.id).val(),
+                        element.trayTypeId = common.isNull($("#trayTypeId_" + element.id).val()) ? element.trayTypeId : $("#trayTypeId_" + element.id).val(),
+                        element.agvLocation = common.isNull($("#agvLocation_" + element.id).val()) ? element.agvLocation : $("#agvLocation_" + element.id).val(),
+                        element.runOffSet_Y = common.isNull($("#runOffSet_Y_" + element.id).val()) ? element.runOffSet_Y : $("#runOffSet_Y_" + element.id).val(),
+                        element.runOffSet_X = common.isNull($("#runOffSet_X_" + element.id).val()) ? element.runOffSet_X : $("#runOffSet_X_" + element.id).val()
+                });
+                console.log(detailData);
+
+
+            }
+            //表单验证
+            function checkData(data) {
+                GetData();
+                var resRetrun = true;
+                if (detailData == null || detailData.length <= 0) {
+                    resRetrun = false;
+                    layer.alert($.i18n.prop('布局信息不能为空'));
+                }
+                var index = 1;
+                detailData.forEach(element => {
+                    if (element.column === '' || element.row === '' || element.colSpan === '' || element.rowSpan === '') {
+                        layer.alert('第' + index + '行布局信息不完整！');
+                        resRetrun = false;
+                        return;
+                    }
+                    index++;
+                });
+
+                return resRetrun;
+            }
+
+
+            //表单验证
+            form.verify({
+                checkName: function (value, item) {
+                    var count = false;
+                    common.get(function (res) {
+                        count = res;
+                        lang.render();
+                    }, apis.CheckLayoutName, { name: value });
+                    if (count)
+                        return $.i18n.prop("名称已经存在");
+                }
+            });
+            //表单提交
+            form.on("submit(formSubmit)", function (data) {
+                if (checkData()) {
+                    var form_data = form.val("wms-form");
+                    form_data.isDefault = form_data.isDefault === 'on' ? true : false;
+                    common.post(function (res) {
+                        layer.msg($.i18n.prop('提交成功'), {
+                            icon: 1, time: 2000, end: function () {
+                                parent.layer.closeAll();
+                                lang.render();
+
+                            }
+                        });
+                    }, apis.InsertLayouts, { layout: form_data, details: detailData });
+                }
+            });
+        })
+
+
+    </script>
+</body>
+
+</html>

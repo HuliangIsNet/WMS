@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta id="i18n_pagename" content="container-common" />
+	<title>货柜管理</title>
+	<link rel="stylesheet" href="../../component/pear/css/pear.css" />
+	<meta id="i18n_pagename" content="container-common" />
+</head>
+
+<body class="pear-container">
+	<div class="layui-card">
+		<div class="layui-card-body">
+			<form class="layui-form" action="">
+				<div class="layui-form-item">
+					<div class="layui-form-item layui-inline">
+						<label class="layui-form-label" data-i18n-text="货柜名称"></label>
+						<div class="layui-input-inline">
+							<input type="text" name="name" placeholder="" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-form-item layui-inline">
+						<button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="user-query">
+							<i class="layui-icon layui-icon-search"></i>
+							<span data-i18n-text="查询"></span>
+						</button>
+						<button type="reset" class="pear-btn pear-btn-md">
+							<i class="layui-icon layui-icon-refresh"></i>
+							<span data-i18n-text="重置"></span>
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="layui-card">
+		<div class="layui-card-body">
+			<table id="container-table" lay-filter="container-table"></table>
+		</div>
+	</div>
+
+	<script type="text/html" id="container-toolbar">
+		<button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
+			<i class="layui-icon layui-icon-add-1"></i>
+			<span data-i18n-text="新增"></span>
+		</button>
+	</script>
+
+	<script type="text/html" id="container-bar">
+		<button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit"><i class="layui-icon layui-icon-edit"></i></button>
+		<button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i class="layui-icon layui-icon-delete"></i></button>
+		<button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="hopper"><i class="layui-icon layui-icon-file"></i></button>
+	</script>
+	<script src="/component/preview/js/jquery.js"></script>
+	<script src="/component/i18n/jquery.i18n.properties.js"></script>
+	<script src="../../component/layui/layui.js"></script>
+	<script src="../../component/pear/pear.js"></script>
+	<script src="/component/preview/js/jquery.js"></script>
+	<script src="/component/i18n/jquery.i18n.properties.js"></script>
+	<script>
+        layui.use(['table', 'form', 'jquery', 'common', "apis", 'lang'], function () {
+			let table = layui.table;
+			let form = layui.form;
+			let $ = layui.jquery;
+			let common = layui.common;
+			let apis = layui.apis;
+			let lang = layui.lang;
+			let MODULE_PATH = "";
+            lang.render();
+            form.render();
+			let cols = [
+				[
+					{
+						title: $.i18n.prop('识别号'),
+						field: 'key',
+						align: 'center',
+						width: 300
+					},
+					{
+                        title: $.i18n.prop('名称'),
+						field: 'name',
+						align: 'center'
+					},
+
+					{
+                        title: $.i18n.prop('货柜类型'),
+						align: 'center',
+						templet: function (d) {
+							var containerType;
+							common.get(function (res) {
+								containerType = res;
+							}, apis.GetContainerType);
+							return $.i18n.prop(containerType[d.containerType]);
+						}
+					},
+					{
+                        title: $.i18n.prop('状态'),
+						align: 'center',
+						templet: function (d) {
+							var state = common.GetState();
+                            var html = "<input type='checkbox' name='enable' value='" + d.id + "' lay-filter='state' lay-skin='switch' lay-text='" + $.i18n.prop('启用|禁用') +"' " + (state[d.state] == '启用' ? 'checked' : '') + " />";
+							return html;
+						}
+					},
+					{
+                        title: $.i18n.prop('是否正在运行'),
+						align: 'center',
+						templet: function (d) {
+							var html = "<input type='checkbox' name='isRun' value='" + d.id + "' lay-filter='isRun' lay-skin='switch' lay-text='"+$.i18n.prop('是|否')+"' " + (d.isRun ? 'checked' : '') + " />";
+							return html;
+						}
+					},
+					{
+                        title: $.i18n.prop('操作'),
+						toolbar: '#container-bar',
+						align: 'center',
+						width: 150
+					}
+				]
+			]
+			var container_table = table.render({
+				elem: '#container-table',
+				url: apis.GetContainerPageList,
+                page: { layout: ['prev', 'page', 'next', 'count'], countText: [$.i18n.prop('共') + ' ', ' ' + $.i18n.prop('条')] },
+                text: { none: $.i18n.prop('无数据') },
+				cols: cols,
+				skin: 'line',
+				toolbar: '#container-toolbar',
+				defaultToolbar: false,
+				request: {
+					pageName: 'pageIndex',//页码的参数名称，默认：page
+					limitName: 'pageSize' //每页数据量的参数名，默认：limit
+				},
+				response: {
+					statusCode: "200"
+				},
+				done: function (d) {
+					lang.render();
+				}
+			});
+
+
+			table.on('tool(container-table)', function (obj) {
+				if (obj.event === 'edit') {
+					window.edit(obj);
+				}
+				else if (obj.event === 'remove') {
+					window.remove(obj);
+				}
+				else if (obj.event === 'hopper') {
+					window.hopper(obj);
+				}
+			});
+
+			table.on('toolbar(container-table)', function (obj) {
+				if (obj.event === 'add') {
+					window.add();
+				}
+			});
+
+			form.on('submit(user-query)', function (data) {
+				container_table.reload({
+					where: data.field
+				})
+				return false;
+			});
+
+			form.on('switch(state)', function (obj) {
+				var container = { containerId: this.value, state: obj.elem.checked ? 0 : 1 };
+				common.post(function (res) {
+					layer.msg($.i18n.prop("货柜状态修改成功"), { icon: 1, time: 2000 });
+				}, apis.UpdateContainerState, container);
+			});
+
+
+			form.on('switch(isRun)', function (obj) {
+				var container = { containerId: this.value, isRun: obj.elem.checked ? true : false };
+				common.post(function (res) {
+                    layer.msg($.i18n.prop("货柜当前运行状态切换成功"), { icon: 1, time: 2000 });
+				}, apis.UpdateContainerRun, container);
+			});
+
+			window.add = function () {
+				layer.open({
+					type: 2,
+                    title: $.i18n.prop('新增'),
+					shade: 0.1,
+					area: [common.isModile() ? '100%' : '900px', common.isModile() ? '100%' : '450px'],
+					content: MODULE_PATH + 'add.html',
+					end: function () {
+						window.refresh();
+					}
+				});
+			}
+			window.remove = function (obj) {
+                layer.confirm($.i18n.prop('确定要删除该货柜'), {
+					icon: 3,
+                    title: $.i18n.prop('提示')
+				}, function (index) {
+					layer.close(index);
+					common.post(function (res) {
+                        layer.msg($.i18n.prop("删除成功"), { icon: 1, time: 2000, end: function () { window.refresh(); } });
+					}, apis.DeleteContainer + "?containerId=" + obj.data["id"]);
+				});
+			};
+			window.edit = function (obj) {
+				layer.open({
+					type: 2,
+                    title: $.i18n.prop( '修改'),
+					shade: 0.1,
+					area: [common.isModile() ? '100%' : '900px', common.isModile() ? '100%' : '600px'],
+					content: MODULE_PATH + 'edit.html?containerId=' + escape(obj.data.id),
+					end: function () {
+						window.refresh();
+					}
+				});
+			}
+			window.hopper = function (obj) {
+				layer.open({
+					type: 2,
+                    title: $.i18n.prop('料斗管理'),
+					shade: 0.1,
+					area: ['1200px', '600px'],
+					content: MODULE_PATH + 'hopper/index.html?containerId=' + escape(obj.data.id) + "&containerName=" + escape(obj.data.name) + "&weight=" + escape(obj.data.totalBearing),
+					end: function () {
+						window.refresh();
+					}
+				});
+			};
+
+			window.refresh = function (param) {
+				container_table.reload({ page: { curr: 1 } }, true);
+			}
+		})
+	</script>
+</body>
+
+</html>

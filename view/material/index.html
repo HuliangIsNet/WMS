@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta id="i18n_pagename" content="basic-common" />
+    <title>物料管理</title>
+    <link rel="stylesheet" href="/component/pear/css/pear.css" />
+</head>
+
+<body class="pear-container">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label" data-i18n-text="物料名称"></label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="name" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label" data-i18n-text="物料代码"></label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="code" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label" data-i18n-text="条码"></label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="barCode" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="table-query">
+                            <i class="layui-icon layui-icon-search"></i>
+                            <span data-i18n-text="查询"></span>
+                        </button>
+                        <button type="reset" class="pear-btn pear-btn-md">
+                            <i class="layui-icon layui-icon-refresh"></i>
+                            <span data-i18n-text="重置"></span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="material-table" lay-filter="material-table"></table>
+        </div>
+    </div>
+
+    <script type="text/html" id="material-toolbar">
+			<button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
+		        <i class="layui-icon layui-icon-add-1"></i>
+		        <span data-i18n-text="新增"></span>
+		    </button>
+            <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="import" id="import">
+		        <i class="pear-icon pear-icon-import"></i>
+                <span data-i18n-text="导入"></span>
+		    </button>
+		    <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove">
+		        <i class="layui-icon layui-icon-delete"></i>
+		        
+                <span data-i18n-text="删除"></span>
+		    </button>
+		</script>
+
+    <script type="text/html" id="material-bar">
+			<button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit"><i class="layui-icon layui-icon-edit"></i></button>
+		    <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i class="layui-icon layui-icon-delete"></i></button>
+            <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="barcode"><i class="layui-icon layui-icon-print"></i></button>
+		</script>
+    <script src="/component/preview/js/jquery.js"></script>
+    <script src="/component/i18n/jquery.i18n.properties.js"></script>
+    <script src="/component/layui/layui.js"></script>
+    <script src="/component/pear/pear.js"></script>
+    <script src="/component/lodop/LodopFuncs.js"></script>
+    <script>
+        layui.use(['table', 'form', 'jquery', 'common', 'apis', 'upload', 'lang'], function () {
+            let table = layui.table;
+            let form = layui.form;
+            let $ = layui.jquery;
+            let common = layui.common;
+            let apis = layui.apis;
+            let upload = layui.upload;
+            let layer = layui.layer;
+            let lang = layui.lang;
+            let MODULE_PATH = "";
+            lang.render();
+            let cols = [
+                [{
+                    type: 'checkbox'
+                },
+                {
+                    title: $.i18n.prop('物料名称'),
+                    field: 'name',
+                    align: 'center'
+                },
+                {
+                    title: $.i18n.prop('物料代码'),
+                    field: 'code',
+                    align: 'center'
+                },
+                {
+                    title: $.i18n.prop('物料型号'),
+                    field: 'spec',
+                    align: 'center'
+                },
+                {
+                    title: $.i18n.prop('计量单位'),
+                    field: 'unit',
+                    align: 'center'
+                },
+                {
+                    title: $.i18n.prop('条码'),
+                    field: 'barCode',
+                    align: 'center'
+                },
+                {
+                    title: $.i18n.prop('操作'),
+                    toolbar: '#material-bar',
+                    align: 'center',
+                    width: 150
+                }
+                ]
+            ]
+
+            var material_table = table.render({
+                elem: '#material-table',
+                url: apis.GetMaterialPageList,
+                cols: cols,
+                skin: 'line',
+                toolbar: '#material-toolbar',
+                page: { layout: ['prev', 'page', 'next', 'count'], countText: [$.i18n.prop('共') + ' ', ' ' + $.i18n.prop('条')] },
+                text: { none: $.i18n.prop('无数据') },
+                defaultToolbar: [],
+                request: {
+                    pageName: 'pageIndex',//页码的参数名称，默认：page
+                    limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                },
+                response: {
+                    statusCode: "200"
+                },
+                done: function (d) {
+                    //执行实例
+                    var uploadInst = upload.render({
+                        elem: '#import' //绑定元素
+                        , accept: 'file',
+                        acceptMime: 'application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                        , url: apis.ImportMaterial //上传接口,
+                        , exts: "xlsx|xls",
+                        done: function (res) {
+                            //上传完毕回调
+                            if (res.data)
+                                layer.msg($.i18n.prop('导入成功'), {
+                                    end: function () {
+                                        material_table.reload();
+                                    }
+                                });
+                            else
+                                layer.alert(res.msg);
+                        }
+                        , error: function () {
+                            //请求异常回调
+                        }
+
+
+                    });
+                    lang.render();
+                }
+            });
+
+            table.on('tool(material-table)', function (obj) {
+                if (obj.event === 'remove') {
+                    window.remove(obj);
+                } else if (obj.event === 'edit') {
+                    window.edit(obj);
+                }
+                else if (obj.event === 'barcode') {
+                    window.barcode(obj);
+                }
+            });
+
+            table.on('toolbar(material-table)', function (obj) {
+                if (obj.event === 'add') {
+                    window.add();
+                } else if (obj.event === 'refresh') {
+                    window.refresh();
+                } else if (obj.event === 'batchRemove') {
+                    window.batchRemove(obj);
+                }
+            });
+
+            form.on('submit(material-query)', function (data) {
+                material_table.reload({
+                    where: data.field
+                });
+                return false;
+            });
+
+            form.on('switch(user-enable)', function (obj) {
+                layer.tips(this.value + ' ' + this.name + '：' + obj.elem.checked, obj.othis);
+            });
+
+            window.add = function () {
+                layer.open({
+                    type: 2,
+                    title: $.i18n.prop('新增'),
+                    shade: 0.1,
+                    area: [common.isModile() ? '100%' : '800px', common.isModile() ? '100%' : '450px'],
+                    content: MODULE_PATH + 'add.html',
+
+                    end: function () {
+                        window.refresh();
+                    }
+                });
+            }
+
+            window.edit = function (obj) {
+                layer.open({
+                    type: 2,
+                    title: $.i18n.prop('编辑'),
+                    shade: 0.1,
+                    area: [common.isModile() ? '100%' : '800px', common.isModile() ? '100%' : '450px'],
+                    content: MODULE_PATH + 'edit.html?materialId=' + obj.data["id"],
+                    end: function () {
+                        window.refresh();
+                    }
+                });
+            }
+
+            window.remove = function (obj) {
+                layer.confirm($.i18n.prop('确定要删除该物料'), {
+                    icon: 3,
+                    btn: [$.i18n.prop('确认'),$.i18n.prop('取消')],
+                    title: $.i18n.prop('提示')
+                }, function (index) {
+                    layer.close(index);
+                    let loading = layer.load();
+                    common.post(function (res) {
+                        layer.close(loading);
+                        layer.msg($.i18n.prop("删除成功"), { icon: 1, time: 2000, end: function () { window.refresh(); } });
+                    }, apis.DeleteMaterial, { ids: obj.data["id"] });
+                });
+            };
+
+            window.batchRemove = function (obj) {
+
+                var checkIds = common.checkField(obj, 'id');
+
+                if (checkIds === "") {
+                    layer.msg($.i18n.prop("未选中数据"), {
+                        icon: 3,
+                        time: 1000
+                    });
+                    return false;
+                }
+
+                layer.confirm($.i18n.prop('确定要删除这些物料'), {
+                    icon: 3,
+                    btn: [$.i18n.prop('确认'),$.i18n.prop('取消')],
+                    title: $.i18n.prop('提示')
+                }, function (index) {
+                    layer.close(index);
+                    common.post(function (res) {
+                        layer.msg($.i18n.prop("删除成功"), { icon: 1, time: 2000, end: function () { window.refresh(); } });
+                    }, apis.DeleteMaterial, { ids: checkIds.toString() });
+                });
+            };
+            window.barcode = function (obj) {
+                var LODOP = getLodop();
+                LODOP.PRINT_INIT("");
+                LODOP.SET_PRINT_PAGESIZE(1, 600, 600, 'strPageName');
+                LODOP.ADD_PRINT_TEXT("2mm", "15mm", "40mm", "10mm", obj.data.name);
+                //LODOP.ADD_PRINT_BARCODE("8mm", "2mm", "60mm", "30mm", '128Auto', obj.data.barCode);
+                LODOP.ADD_PRINT_BARCODE("8mm", "2mm", "90mm", "30mm", '128Auto', obj.data.barCode);
+                //LODOP.PREVIEW();
+                LODOP.PRINT();
+            };
+            window.refresh = function (param) {
+                material_table.reload({ page: { curr: 1 } });
+            };
+        })
+    </script>
+</body>
+
+</html>

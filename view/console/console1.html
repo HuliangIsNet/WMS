@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>控制后台</title>
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta id="i18n_pagename" content="home-common" />
+	<link rel="stylesheet" href="../../component/pear/css/pear.css" />
+	<link rel="stylesheet" href="../../admin/css/other/console1.css" />
+</head>
+
+<body class="pear-container">
+	<div>
+		<div class="layui-row layui-col-space10">
+			<div class="layui-col-xs6 layui-col-md3">
+				<div class="layui-card top-panel">
+					<div class="layui-card-header" data-i18n-text="存储总数"></div>
+					<div class="layui-card-body">
+						<div class="layui-row layui-col-space5">
+							<div class="layui-col-xs8 layui-col-md8 top-panel-number" style="color: #28333E;"
+								id="value1">
+								0
+							</div>
+							<div class="layui-col-xs4 layui-col-md4 top-panel-tips">
+								<svg t="1648692594681" class="icon" viewBox="0 0 1024 1024" version="1.1"
+									xmlns="http://www.w3.org/2000/svg" p-id="1317" width="200" height="200">
+									<path
+										d="M621.67 686.49a55.21 55.21 0 0 0-17 40.91c0.13 19.7 12.42 32.26 20.14 39.9l92.51 102.64q0.53 0.59 1.09 1.14l0.07 0.07c4.51 4.39 13.89 13.53 30.39 13.53 23.42 0 41.09-17.65 41.09-41v-39c38.78 4.11 68.62 25.32 94.67 66.6 7.82 14.71 19.41 22.16 34.47 22.16 19.41 0 41-16.86 41-41a24.21 24.21 0 0 0-0.16-2.75c-0.21-1.87-0.42-4.74-0.66-8.06-1.61-22.17-5-68.29-30.26-110.27a164.36 164.36 0 0 0-58.74-57.83c-22.75-13.25-49.74-22-80.45-26.15v-31.73c0-11.16-4.9-22.46-13.43-31s-19.83-13.43-31-13.43c-17.09 0-26.72 9.88-30.82 14.1l-0.48 0.51z m31.59 39.92a6.66 6.66 0 0 1 2.15-5q0.74-0.68 1.42-1.43l84.53-92v41.31a24.28 24.28 0 0 0 22.86 24.24c106.36 6.23 135.4 67.14 144.14 127.22-14.88-18.58-31.06-32.95-49-43.56C832 761 800 753.71 764.44 755.61a24.28 24.28 0 0 0-23 24.24v44.28l-81-89.86q-0.47-0.53-1-1c-1.69-1.73-5.17-5.16-6.18-6.85zM538.13 855.62h-52.7c-20.49 0-24.89 4.39-24.89 24.88v54.16c0 20.5 4.39 24.89 24.89 24.89h52.7c20.5 0 24.89-4.39 24.89-24.89v-54.15c-1.46-20.51-5.85-24.89-24.89-24.89zM362.48 855.62h-52.7c-20.49 0-24.89 4.39-24.89 24.88v54.16c0 20.5 4.39 24.89 24.89 24.89h52.7c20.49 0 24.88-4.39 24.88-24.89v-54.15c-1.47-20.51-5.86-24.89-24.88-24.89zM362.48 667.9h-52.7c-20.49 0-24.89 4.39-24.89 24.88v52.7c0 20.49 4.39 24.88 24.89 24.88h52.7c20.49 0 24.88-4.39 24.88-24.88v-54.15c-1.47-19.04-5.86-23.43-24.88-23.43zM485.43 490.78c-20.49 0-24.88 4.39-24.88 24.88v54.16c0 20.5 4.39 24.89 24.88 24.89h52.7c20.49 0 24.88-4.39 24.88-24.89v-54.16c-1.46-20.49-5.85-24.88-24.88-24.88zM538.13 667.9h-52.7c-20.49 0-24.89 4.39-24.89 24.88v52.7c0 20.49 4.39 24.88 24.89 24.88h52.7c20.5 0 24.89-4.39 24.89-24.88v-54.15c-1.46-19.04-5.85-23.43-24.89-23.43zM362.48 490.78h-52.7c-20.49 0-24.89 4.39-24.89 24.88v54.16c0 20.49 4.39 24.88 24.89 24.88h52.7c20.49 0 24.88-4.39 24.88-24.88v-54.16c-1.47-21.95-5.86-24.88-24.88-24.88z"
+										p-id="1318"></path>
+									<path
+										d="M914.29 427.93A28.7 28.7 0 1 0 948.68 382l-419-313.65a28.7 28.7 0 0 0-34.37 0L75.53 382a28.7 28.7 0 1 0 34.35 46l40.54-30.3v533.17a28.69 28.69 0 0 0 57.38 0v-576.1l304.65-227.63z"
+										p-id="1319"></path>
+								</svg>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="layui-col-xs6 layui-col-md3">
+				<div class="layui-card top-panel">
+					<div class="layui-card-header" data-i18n-text="今日入库"></div>
+					<div class="layui-card-body">
+						<div class="layui-row layui-col-space5">
+							<div class="layui-col-xs8 layui-col-md8 top-panel-number" style="color: #28333E;"
+								id="value2">
+								0
+							</div>
+							<div class="layui-col-xs4 layui-col-md4 top-panel-tips">
+								<svg t="1648692554643" class="icon" viewBox="0 0 1024 1024" version="1.1"
+									xmlns="http://www.w3.org/2000/svg" p-id="1181" width="200" height="200">
+									<path
+										d="M850.7 585.83l-0.48-0.51c-4.11-4.22-13.73-14.1-30.82-14.1-11.16 0-22.46 4.9-31 13.43s-13.4 19.84-13.4 31v31.63c-30.71 4.14-57.7 12.9-80.45 26.15a164.36 164.36 0 0 0-58.74 57.83c-25.3 42-28.65 88.11-30.26 110.27-0.24 3.32-0.45 6.19-0.66 8.06a24.21 24.21 0 0 0-0.16 2.75c0 24.19 21.63 41 41 41 15.06 0 26.65-7.45 34.47-22.16 26.06-41.28 55.89-62.49 94.67-66.6v39c0 23.4 17.66 41 41.09 41 16.5 0 25.88-9.14 30.39-13.53l0.07-0.07q0.56-0.55 1.09-1.14L940 767.3c7.73-7.64 20-20.2 20.14-39.9a55.21 55.21 0 0 0-17-40.91z m54.71 147.42l-1 1-81 89.86v-44.26a24.28 24.28 0 0 0-23-24.24c-35.61-1.9-67.55 5.38-95 21.62-17.91 10.61-34.09 25-49 43.56 8.74-60.08 37.78-121 144.14-127.22a24.28 24.28 0 0 0 22.86-24.24V628l84.53 92q0.68 0.74 1.42 1.43a6.66 6.66 0 0 1 2.15 5c-0.89 1.68-4.37 5.11-6.1 6.82zM538.13 855.62h-52.7c-20.49 0-24.89 4.39-24.89 24.88v54.16c0 20.5 4.39 24.89 24.89 24.89h52.7c20.5 0 24.89-4.39 24.89-24.89v-54.15c-1.46-20.51-5.85-24.89-24.89-24.89zM362.48 855.62h-52.7c-20.49 0-24.89 4.39-24.89 24.88v54.16c0 20.5 4.39 24.89 24.89 24.89h52.7c20.49 0 24.88-4.39 24.88-24.89v-54.15c-1.47-20.51-5.86-24.89-24.88-24.89zM362.48 667.9h-52.7c-20.49 0-24.89 4.39-24.89 24.88v52.7c0 20.49 4.39 24.88 24.89 24.88h52.7c20.49 0 24.88-4.39 24.88-24.88v-54.15c-1.47-19.04-5.86-23.43-24.88-23.43zM485.43 490.78c-20.49 0-24.88 4.39-24.88 24.88v54.16c0 20.5 4.39 24.89 24.88 24.89h52.7c20.49 0 24.88-4.39 24.88-24.89v-54.16c-1.46-20.49-5.85-24.88-24.88-24.88zM538.13 667.9h-52.7c-20.49 0-24.89 4.39-24.89 24.88v52.7c0 20.49 4.39 24.88 24.89 24.88h52.7c20.5 0 24.89-4.39 24.89-24.88v-54.15c-1.46-19.04-5.85-23.43-24.89-23.43zM362.48 490.78h-52.7c-20.49 0-24.89 4.39-24.89 24.88v54.16c0 20.49 4.39 24.88 24.89 24.88h52.7c20.49 0 24.88-4.39 24.88-24.88v-54.16c-1.47-21.95-5.86-24.88-24.88-24.88z"
+										p-id="1182"></path>
+									<path
+										d="M914.29 427.93A28.7 28.7 0 1 0 948.68 382l-419-313.65a28.7 28.7 0 0 0-34.37 0L75.53 382a28.7 28.7 0 1 0 34.35 46l40.54-30.3v533.17a28.69 28.69 0 0 0 57.38 0v-576.1l304.65-227.63z"
+										p-id="1183"></path>
+								</svg>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="layui-col-xs6 layui-col-md3">
+				<div class="layui-card top-panel">
+					<div class="layui-card-header" data-i18n-text="今日出库"></div>
+					<div class="layui-card-body">
+						<div class="layui-row layui-col-space5">
+							<div class="layui-col-xs8 layui-col-md8 top-panel-number" style="color: #28333E;"
+								id="value3">
+								0
+							</div>
+							<div class="layui-col-xs4 layui-col-md4  top-panel-tips">
+								<svg t="1648692678205" class="icon" viewBox="0 0 1024 1024" version="1.1"
+									xmlns="http://www.w3.org/2000/svg" p-id="1453" width="200" height="200">
+									<path
+										d="M391 451.13h242.23a33.23 33.23 0 0 0 33.23-33.23V175.63a33.23 33.23 0 0 0-33.23-33.23H391a33.23 33.23 0 0 0-33.23 33.23V417.9A33.23 33.23 0 0 0 391 451.13z m24.11-251.39h194.02v194.05H415.07zM214.34 793.79h242.27a33.23 33.23 0 0 0 33.23-33.23V518.3a33.23 33.23 0 0 0-33.23-33.23H214.34a33.23 33.23 0 0 0-33.23 33.23v242.26a33.23 33.23 0 0 0 33.23 33.23z m24.11-251.39H432.5v194.06H238.45zM534.36 518.3v242.26a33.23 33.23 0 0 0 33.23 33.23h242.27a33.23 33.23 0 0 0 33.23-33.23V518.3a33.23 33.23 0 0 0-33.23-33.23H567.59a33.23 33.23 0 0 0-33.23 33.23z m57.34 24.1h194.05v194.06H591.7z"
+										p-id="1454"></path>
+									<path
+										d="M931.52 628a28.67 28.67 0 0 0-28.67 28.67v167.09h-781.5V656.7A28.67 28.67 0 0 0 92.68 628 28.67 28.67 0 0 0 64 656.7v195.73a28.67 28.67 0 0 0 28.68 28.67h838.84a28.67 28.67 0 0 0 28.67-28.67V656.7a28.67 28.67 0 0 0-28.67-28.7z"
+										p-id="1455"></path>
+								</svg>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="layui-col-xs6 layui-col-md3">
+				<div class="layui-card top-panel">
+					<div class="layui-card-header" data-i18n-text="联机设备"></div>
+					<div class="layui-card-body">
+						<div class="layui-row layui-col-space5">
+							<div class="layui-col-xs8 layui-col-md8 top-panel-number" style="color: #28333E;"
+								id="value4">
+								4
+							</div>
+							<div class="layui-col-xs4 layui-col-md4 top-panel-tips">
+								<svg t="1648692714236" class="icon" viewBox="0 0 1024 1024" version="1.1"
+									xmlns="http://www.w3.org/2000/svg" p-id="1693" width="200" height="200">
+									<path
+										d="M896 576 896 448l-64 0L576 448 576 384l192 0L768 64 320 64l0 320 192 0 0 64L256 448 192 448l0 64 0 64L0 576l0 320 384 0L384 576 256 576 256 512l576 0 0 64-192 0 0 320 384 0L1024 576 896 576zM384 320 384 128l320 0 0 192L384 320zM320 832 64 832l0-192 256 0L320 832zM960 832l-256 0 0-192 256 0L960 832z"
+										p-id="1694"></path>
+								</svg>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="layui-row layui-col-space10">
+			<div class="layui-col-md6">
+				<div class="layui-card">
+					<div class="layui-card-body">
+						<div class="layui-tab custom-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+							<div id="echarts-records" style="background-color:#ffffff;min-height:400px;padding: 10px">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="layui-col-md6">
+				<div class="layui-card" style="height: 210px;">
+					<div class="layui-card-header" data-i18n-text="临期通知"></div>
+					<div class="layui-card-body">
+						<ul class="list" id="NearExpired">
+
+						</ul>
+					</div>
+				</div>
+				<div class="layui-card" style="height: 215px;">
+					<div class="layui-card-header" data-i18n-text="库存预警"></div>
+					<div class="layui-card-body">
+						<ul class="list" id="SafeWarning">
+
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-col-space10">
+		<div class="layui-col-md6">
+			<div class="layui-card">
+				<div class="layui-card-header" data-i18n-text="入库记录"></div>
+				<div class="layui-card-body">
+					<ul class="list" id="socktin">
+
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="layui-col-md6">
+			<div class="layui-card">
+				<div class="layui-card-header" data-i18n-text="出库记录">
+
+				</div>
+				<div class="layui-card-body">
+					<ul class="list" id="socktout">
+
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	</div>
+
+	<script type="text/html" id="cardshow">
+		<li class="list-item">
+			<span class="title">{{count}}</span>
+			<span class="footer">{{time}}</span>
+		</li>
+	</script>
+	<!--</div>-->
+	<script src="../../component/preview/js/jquery.js"></script>
+	<script src="../../component/i18n/jquery.i18n.properties.js"></script>
+	<script src="../../component/layui/layui.js"></script>
+	<script src="../../component/pear/pear.js"></script>
+	<script>
+		layui.use(['layer', 'echarts', 'element', 'count', 'common', 'apis', 'echartsdata', 'lang'], function () {
+			var $ = layui.jquery,
+				layer = layui.layer,
+				element = layui.element,
+				count = layui.count,
+				echarts = layui.echarts,
+				common = layui.common,
+				apis = layui.apis,
+				echartsdata = layui.echartsdata,
+				lang = layui.lang;
+
+
+			//获取到头部信息
+			common.get(function (res) {
+				count.up("value1", {
+					time: 3000,
+					num: res.item1,
+					regulator: 50
+				})
+
+				count.up("value2", {
+					time: 3000,
+					num: res.item2,
+					regulator: 50
+				})
+
+				count.up("value3", {
+					time: 3000,
+					num: res.item3,
+					regulator: 50
+				})
+
+				count.up("value4", {
+					time: 3000,
+					num: res.item4,
+					regulator: 50
+				})
+			}, apis.GetHomeInfo);
+
+
+			//库存警报
+			common.get(function (res) {
+				var html = "";
+				var templetHtml = $("#cardshow").html();
+				layui.each(res, function (i, item) {
+					html += templetHtml.replace("{{count}}", item.item1 + '(' + item.item2 + ')' + ' —— ' + item.item3)
+						.replace("{{time}}", item.item4);
+				});
+				$("#NearExpired").html(html);
+			}, apis.GetNearExpiredProduct);
+			//库存警报
+			common.get(function (res) {
+				var html = "";
+				var templetHtml = $("#cardshow").html();
+				layui.each(res, function (i, item) {
+					html += templetHtml.replace("{{count}}", item.item1 + '(' + item.item2 + ')' + ' —— ' + item.item3)
+						.replace("{{time}}", layui.util.toDateString(new Date(), 'yyyy-MM-dd'));
+				});
+				$("#SafeWarning").html(html);
+			}, apis.GetSafeWarning);
+			//出库入库记录
+			common.get(function (res) {
+				var templetHtml = $("#cardshow").html();
+				var inhtml = "";
+				layui.each(res.item1, function (i, item) {
+					inhtml += templetHtml.replace("{{count}}", item.materialName + '(' + item.materialCode + ')    &nbsp;&nbsp;&nbsp;&nbsp;<lable data-i18n-text="数量"></lable>：' + item.quantity)
+						.replace("{{time}}", layui.util.toDateString(item.createTime, 'yyyy-MM-dd HH:mm'));
+				});
+				$("#socktin").html(inhtml);
+
+				var outHtml = "";
+				layui.each(res.item2, function (i, item) {
+					$("#stockin").html();
+					outHtml += templetHtml.replace("{{count}}", item.materialName + '(' + item.materialCode + ')  &nbsp;&nbsp;&nbsp;&nbsp;<lable data-i18n-text="数量"></lable>：' + item.quantity)
+						.replace("{{time}}", layui.util.toDateString(item.createTime, 'yyyy-MM-dd HH:mm'));
+				});
+				$("#socktout").html(outHtml);
+			}, apis.GetAllBills);
+
+			lang.render();
+			//图表
+			var echartsRecords = echarts.init(document.getElementById('echarts-records'), 'walden');
+			common.get(function (res) {
+				var ress = [];
+				$.each(res, function (i, item) {
+					var child = [];
+					$.each(item, function (j, x) {
+						child.push($.i18n.prop(x));
+					});
+					ress.push(child);
+				});
+				console.log(ress);
+				echartsdata.setOption(echartsRecords, ress);
+			}, apis.GetBillDataForChart);
+		});
+	</script>
+</body>
+
+</html>

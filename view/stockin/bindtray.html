@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>添加托盘</title>
+    <link rel="stylesheet" href="/component/pear/css/pear.css" />
+
+</head>
+
+<body class="pear-container">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form" lay-filter="wms-form" id="wms-form" action="javascript:void(0);">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">接驳台编号:</label>
+                    <div class="layui-input-block">
+                        <select class="layui-select" id="coveryorNo" lay-search>
+                            <option value="5">1</option>
+                            <option value="6">2</option>
+                            <option value="7">3</option>
+                            <option value="8">4</option>
+                            <option value="9">5</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- <div class="layui-form-item">
+                    <label class="layui-form-label">料盒名称:</label>
+                    <div class="layui-input-block">
+                        <select class="layui-select" id="tray" lay-search>
+                            <option value="0">--请选择料盒--</option>
+                        </select>
+                    </div>
+                </div> -->
+            </form>
+        </div>
+    </div>
+    <script src="/component/layui/layui.js"></script>
+    <script src="/component/pear/pear.js"></script>
+    <script>
+        layui.use(['form', 'common', 'apis', 'barcode'], function () {
+            var $ = layui.$,
+                form = layui.form,
+                common = layui.common,
+                barcode = layui.barcode,
+                apis = layui.apis;
+            common.setHeight();
+            //料盒
+            common.get(function (res) {
+                layui.each(res, function (i, item) {
+                    $("#tray").append(new Option(item.name, item.id));
+                });
+            }, apis.GetTrayList);
+
+            // common.get(function(res){
+            //     layui.each(res,function(i,item){
+            //         $("#stockType").append(new Option(item, i));
+            //     })
+            // },apis.GetStockType);
+            form.render('select');
+            //表单提交
+            form.on("submit(formSubmit)", function (data) {
+                parent.layer.closeAll();
+            });
+
+
+
+            barcode.startListen({
+                listenerObj: '#wms-form',
+                show: function (code) {
+                    barcodeSelect(code);
+                }
+            });
+            function barcodeSelect(code) {
+                console.log(res);
+                common.get({ barcode: code }, apis.GetTrayModel, function (res) {
+                    console.log(res);
+                    if (res == null || res.length <= 0) {
+                        layer.msg('料盒不存在，请正确扫描条码！');
+                        return;
+                    }
+                    else {
+                        $("#tray").val(res.barcode);
+                    }
+
+                });
+            }
+        })
+    </script>
+</body>
+
+</html>

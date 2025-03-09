@@ -1,0 +1,91 @@
+[
+	{
+		"id": 1,
+		"title": "入库管理",
+		"type": 0,
+		"icon": "layui-icon layui-icon-console",
+		"href": "#",
+		"children":[{
+			"id": 11,
+			"title": "添加入库单",
+			"icon": "layui-icon layui-icon-console",
+			"type": 1,
+			"openType": "_iframe",
+			"href": "view/stockin/index.html"
+		},{
+			"id": 12,
+			"title": "入库单管理",
+			"icon": "layui-icon layui-icon-console",
+			"type": 1,
+			"openType": "_iframe",
+			"href": "view/stockin/stockinquery/index.html"
+		}]
+	},
+	{
+		"id": 2,
+		"title": "出库管理",
+		"type": 0,
+		"icon": "layui-icon layui-icon-console",
+		"href": "",
+		"children":[{
+			"id": 21,
+			"title": "添加出库单",
+			"icon": "layui-icon layui-icon-console",
+			"type": 1,
+			"openType": "_iframe",
+			"href": "view/stockout/index.html"
+		},{
+			"id": 22,
+			"title": "出库单管理",
+			"icon": "layui-icon layui-icon-console",
+			"type": 1,
+			"openType": "_iframe",
+			"href": "view/stockout/stockoutquery/index.html"
+		}]
+	},
+	{
+		"id": 3,
+		"title": "库存台账",
+		"type": 1,
+		"icon": "layui-icon layui-icon-console",
+		"href": "view/inventorybook/index.html"
+	},
+	{
+		"id": 4,
+		"title": "系统管理",
+		"type": 0,
+		"icon": "layui-icon layui-icon-console",
+		"href": "",
+		"children": [{
+			"id": 41,
+			"title": "货柜管理",
+			"icon": "layui-icon layui-icon-console",
+			"type": 1,
+			"openType": "_iframe",
+			"href": "view/container/index.html"
+		}, {
+			"id":42,
+			"title": "料盒类型",
+			"icon": "layui-icon layui-icon-console",
+			"type": 1,
+			"openType": "_iframe",
+			"href": "view/traytype/index.html"
+		}, 
+		{
+			"id":43,
+			"title": "料盒管理",
+			"icon": "layui-icon layui-icon-console",
+			"type": 1,
+			"openType": "_iframe",
+			"href": "view/tray/index.html"
+		},
+		{
+			"id": 44,
+			"title": "料斗工位设置",
+			"icon": "layui-icon layui-icon-console",
+			"type": 1,
+			"openType": "_iframe",
+			"href": "view/hoppertray/index.html"
+		}]
+	}
+]

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta id="i18n_pagename" content="book-common" />
+    <title>库存台账</title>
+    <link rel="stylesheet" href="../../component/pear/css/pear.css" />
+</head>
+
+<body class="pear-container">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label" data-i18n-text="产品名称"></label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="productName" placeholder="" class="layui-input" />
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label" data-i18n-text="产品代码"></label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="productCode" placeholder="" class="layui-input" />
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label" data-i18n-text="产品型号"></label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="productSpec" placeholder="" class="layui-input" />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label" data-i18n-text="货柜名称"></label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="containerName" placeholder="" class="layui-input" />
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <input type="checkbox" name="isUnsafestock"  data-i18n-title="查询不足安全库存产品" />
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="table-query">
+                            <i class="layui-icon layui-icon-search"></i>
+                            <span data-i18n-text="查询"></span>
+                        </button>
+                        <button type="reset" class="pear-btn pear-btn-md">
+                            <i class="layui-icon layui-icon-refresh"></i>
+                            <span data-i18n-text="重置"></span>
+                        </button>
+                        <label style="color:red;" data-i18n-text="请输入查询条件查询库存"></label>
+                    </div>
+                </div>
+        </div>
+        </form>
+    </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="table-table" lay-filter="table-table"></table>
+        </div>
+    </div>
+    <script type="text/html" id="wms-toolbar">
+    </script>
+
+    <script src="/component/preview/js/jquery.js"></script>
+    <script src="/component/i18n/jquery.i18n.properties.js"></script>
+    <script src="../../component/layui/layui.js"></script>
+    <script src="../../component/pear/pear.js"></script>
+    <script>
+        layui.use(['table', 'form', 'jquery', 'common', 'apis','lang'], function () {
+            let table = layui.table;
+            let form = layui.form;
+            let $ = layui.jquery;
+            let common = layui.common;
+            let apis = layui.apis;
+            let lang=layui.lang;
+            let MODULE_PATH = "operate/";
+            lang.render();
+            let cols=[];
+            function DefaultCol() {
+                cols = [
+                    [
+                        {
+                            title: $.i18n.prop('产品名称'),
+                            field: 'productName',
+                            align: 'center',
+                            width: 200,
+                            totalRowText: $.i18n.prop('合计')
+                        },
+                        {
+                            title: $.i18n.prop('产品代码'),
+                            field: 'productCode',
+                            width: 200,
+                            align: 'center'
+                        },
+                        {
+                            title: $.i18n.prop('产品型号'),
+                            field: 'productSpec',
+                            width: 200,
+                            align: 'center'
+                        },
+                        {
+                            title: $.i18n.prop('货柜'),
+                            width: 150,
+                            field: 'containerName',
+                            align: 'center'
+                        },
+                        {
+                            title: $.i18n.prop('托盘'),
+                            width: 100,
+                            field: 'hopperName',
+                            align: 'center'
+                        },
+                        {
+                            title: $.i18n.prop('列'),
+                            field: 'column',
+                            width: 100,
+                            align: 'center'
+                        },
+                        {
+                            title: $.i18n.prop('行'),
+                            width: 100,
+                            field: 'row',
+                            align: 'center'
+                        },
+                        {
+                            title: $.i18n.prop('数量'),
+                            width: 120,
+                            field: 'quantity',
+                            align: 'center',
+                            totalRow: true
+                        }
+                    ]
+                ]
+            }
+            function UnsafeStockCol() {
+                cols = [
+                    [
+                        {
+                            title: $.i18n.prop('产品名称'),
+                            field: 'productName',
+                            align: 'center',
+                            width: 200,
+                            totalRowText: $.i18n.prop('合计')
+                        },
+                        {
+                            title: $.i18n.prop('产品代码'),
+                            field: 'productCode',
+                            width: 200,
+                            align: 'center'
+                        },
+                        {
+                            title: $.i18n.prop('产品型号'),
+                            field: 'productSpec',
+                            width: 200,
+                            align: 'center'
+                        },
+                        {
+                            title: $.i18n.prop('货柜'),
+                            width: 150,
+                            field: 'containerName',
+                            align: 'center'
+                        },
+
+                        {
+                            title: $.i18n.prop('数量'),
+                            width: 120,
+                            field: 'quantity',
+                            align: 'center',
+                            totalRow: true
+                        },
+
+                        {
+                            title: $.i18n.prop('最低补充数量'),
+                            width: 250,
+                            field: 'supplementaryFoodSum',
+                            align: 'center'
+                        }
+                    ]
+                ]
+            }
+
+            table.render({
+                id: 'table-table',
+                elem: '#table-table',
+                // url: apis.GetProductInventoryList,
+                data: [],
+                method: 'post',
+                cols: cols,
+                skin: 'line',
+                totalRow: true,
+                page:false,
+                text:{none:$.i18n.prop('无数据')},
+                toolbar: '#wms-toolbar',
+                request: {
+                    pageName: 'pageIndex',//页码的参数名称，默认：page
+                    limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                },
+                response: {
+                    statusCode: "200"
+                }
+            });
+
+
+
+            form.on('submit(table-query)', function (data) {
+
+                if (data.field.isUnsafestock === 'on') {
+                    UnsafeStockCol();
+                    data.field.unsafeStock = true;
+                }
+                else {
+                    if (common.isNull(data.field.productName) && common.isNull(data.field.productCode) && common.isNull(data.field.productSpec)
+                        && common.isNull(data.field.containerName) && common.isNull(data.field.trayBarCode)) {
+                        layer.alert($.i18n.prop('请输入查询条件'), { icon: 0, time: 3000 ,btn:[$.i18n.prop('确认')]});
+                        return false;
+                    }
+                    DefaultCol();
+                    data.field.unsafeStock = false;
+                }
+
+                table.reload('table-table', {
+                    where: data.field,
+                    contentType: 'application/json',
+                    method: 'post',
+                    cols: cols,
+                    url: apis.GetProductInventoryList + "?unsafeStock=" + data.field.unsafeStock
+                })
+                return false;
+            });
+
+
+            form.render();
+            window.refresh = function (param) {
+                table.reload('table-table');
+            }
+        })
+    </script>
+</body>
+
+</html>

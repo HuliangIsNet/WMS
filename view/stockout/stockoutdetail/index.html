@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta id="i18n_pagename" content="stockoutquery-common" />
+    <title>单据明细</title>
+    <link rel="stylesheet" href="/component/pear/css/pear.css" />
+</head>
+
+<body class="pear-container">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label" data-i18n-text="物料名称"></label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="materialName" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label" data-i18n-text="物料代码"></label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="materialCode" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="table-query">
+                            <i class="layui-icon layui-icon-search"></i>
+                            <span data-i18n-text="查询"></span>
+                        </button>
+                        <button type="reset" class="pear-btn pear-btn-md">
+                            <i class="layui-icon layui-icon-refresh"></i>
+                            <span data-i18n-text="重置"></span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="table-table" lay-filter="table-table"></table>
+        </div>
+    </div>
+
+    <script type="text/html" id="table-toolbar">
+			<button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
+		        <i class="layui-icon layui-icon-add-1"></i>
+		        新增
+		    </button>
+		    <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove">
+		        <i class="layui-icon layui-icon-delete"></i>
+		        删除
+		    </button>
+		</script>
+
+    <script type="text/html" id="table-bar">
+			<button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit"><i class="layui-icon layui-icon-edit"></i></button>
+		    <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i class="layui-icon layui-icon-delete"></i></button>
+		</script>
+    <script src="/component/preview/js/jquery.js"></script>
+    <script src="/component/i18n/jquery.i18n.properties.js"></script>
+    <script src="/component/layui/layui.js"></script>
+    <script src="/component/pear/pear.js"></script>
+    <script>
+        layui.use(['table', 'form', 'jquery', 'common', 'apis', 'lang'], function () {
+            let table = layui.table;
+            let form = layui.form;
+            let $ = layui.jquery;
+            let common = layui.common;
+            let apis = layui.apis;
+            let upload = layui.upload;
+            let layer = layui.layer;
+            let lang = layui.lang;
+            let MODULE_PATH = "";
+            var status = common.GetStatus();
+            lang.render();
+            let cols = [
+                [
+                    {
+                        title: $.i18n.prop('物料名称'),
+                        width: 150,
+                        field: 'materialName',
+                        align: 'center'
+                    },
+                    {
+                        title: $.i18n.prop('物料代码'),
+                        width: 150,
+                        field: 'materialCode',
+                        align: 'center'
+                    },
+                    {
+                        title: $.i18n.prop('时间'),
+                        align: 'center',
+                        width: 150,
+                        field: 'createTime',
+                        templet: function (d) {
+                            return layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm');
+                        }
+                    },
+                    {
+                        title: $.i18n.prop('数量'),
+                        width: 80,
+                        field: 'quantity',
+                        align: 'center'
+                    },
+                    {
+                        title: $.i18n.prop('货柜'),
+                        width: 150,
+                        field: 'containerName',
+                        align: 'center'
+                    },
+                    {
+                        title: $.i18n.prop('托盘'),
+                        width: 150,
+                        field: 'hopperName',
+                        align: 'center'
+                    },
+                    {
+                        title: $.i18n.prop('工位'),
+                        width: 150,
+                        align: 'center',
+                        templet: function (d) {
+                            return $.i18n.prop("列") + "：" + d.column + "(" + d.colSpan + ")" + $.i18n.prop("行") + "：" + d.row + "(" + d.rowSpan + ")";
+                        }
+                    },
+                    {
+                        title: $.i18n.prop('批次'),
+                        field: 'batchCode',
+                        align: 'center',
+                        width: 200
+                    },
+                    {
+                        title: $.i18n.prop('保管期'),
+                        align: 'center',
+                        width: 200,
+                        templt: function (d) {
+                            return layui.util.toDateString(d.periodDate, 'yyyy-MM-dd')
+                        }
+                    },
+                    {
+                        title: $.i18n.prop('供应商'),
+                        field: 'manufacturers',
+                        align: 'center',
+                        width: 200
+                    },
+                    {
+                        title: $.i18n.prop('状态'),
+                        align: 'center',
+                        width: 100,
+                        templet: function (d) {
+                            return $.i18n.prop(status[d.status]);
+                        }
+                    }
+                ]
+            ]
+            var billId = common.GetQueryString("billId");
+            billId = common.isNull(billId) ? 0 : billId;
+            var where = { billId: billId,billtype:2 }
+            var table_table = table.render({
+                elem: '#table-table',
+                url: apis.GetBillSplitPageList,
+                where: where,
+                page: { layout: ['prev', 'page', 'next', 'count'], countText: [$.i18n.prop('共') + ' ', ' ' + $.i18n.prop('条')] },
+                cols: cols,
+                skin: 'line',
+                toolbar: false,
+                defaultToolbar: [],
+                request: {
+                    pageName: 'pageIndex',//页码的参数名称，默认：page
+                    limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                },
+                response: {
+                    statusCode: "200"
+                }
+            });
+
+
+
+            form.on('submit(table-query)', function (data) {
+                where = $.extend(where, data.field);
+                table_table.reload({
+                    where: where
+                });
+                return false;
+            });
+
+
+
+            window.refresh = function (param) {
+                table_table.reload();
+            };
+        })
+    </script>
+</body>
+
+</html>

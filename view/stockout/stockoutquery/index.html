@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>出库单管理</title>
+    <meta id="i18n_pagename" content="stockoutquery-common" />
+    <link rel="stylesheet" href="/component/pear/css/pear.css" />
+    <link rel="stylesheet" href="/admin/css/other/department.css" />
+</head>
+
+<body class="pear-container">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <form class="layui-form" action="">
+                    <div class="layui-form-item">
+                        <div class=" layui-col-md4 layui-col-xs4">
+                            <label class="layui-form-label" data-i18n-text="产品名称"></label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="productName" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class=" layui-col-md4 layui-col-xs4">
+                            <label class="layui-form-label" data-i18n-text="产品代码"></label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="productCode" autocomplete="off" class="layui-input ">
+                            </div>
+                        </div>
+                        <div class=" layui-col-md4 layui-col-xs4">
+                            <label class="layui-form-label" data-i18n-text="物料代码"></label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="materialCode" autocomplete="off" class="layui-input ">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class=" layui-col-md4 layui-col-xs4">
+                            <label class="layui-form-label" data-i18n-text="时间"></label>
+                            <div class="layui-input-inline" style="width: 83px;">
+                                <input type="text" name="start_Time" autocomplete="off" readonly
+                                    class="layui-input time">
+                            </div>
+                            <div class="layui-form-mid">
+                                -
+                            </div>
+                            <div class="layui-input-inline" style="width: 83px;">
+                                <input type="text" name="end_Time" autocomplete="off" readonly class="layui-input time">
+                            </div>
+                        </div>
+                        <div class=" layui-col-md4 layui-col-xs4">
+                            <label class="layui-form-label" data-i18n-text="操作人"></label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="operatorPerson" autocomplete="off" class="layui-input ">
+                            </div>
+                        </div>
+                        <div class="layui-col-md4 layui-col-xs4">
+                            <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="table-query">
+                                <i class="layui-icon layui-icon-search"></i>
+                                <span data-i18n-text="查询"></span>
+                            </button>
+                            <button type="reset" class="pear-btn pear-btn-md">
+                                <i class="layui-icon layui-icon-refresh"></i>
+                                <span data-i18n-text="重置"></span>
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <table id="table-table" lay-filter="table-table"></table>
+            </div>
+        </div>
+
+    </div>
+    <script type="text/html" id="wms-toolbar">
+    </script>
+    <script type="text/html" id="tabel-createTime">
+        {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm')}}
+    </script>
+    <script type="text/html" id="table-bar">
+        {{# if(d.status==0){ }}
+        <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i class="layui-icon layui-icon-delete"></i></button>
+        <!-- <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="setting"><i class="pear-icon pear-icon-setting"></i></button> -->
+        {{# } }}
+
+        <!-- {{# if(d.source==1){ }}
+        <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="backproductno"><i class="layui-icon layui-icon-edit"></i></button>
+        {{# } }} -->
+        <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="detail"><i class="layui-icon layui-icon-file"></i></button>
+    </script>
+    <script src="/component/preview/js/jquery.js"></script>
+    <script src="/component/i18n/jquery.i18n.properties.js"></script>
+    <script src="/component/layui/layui.js"></script>
+    <script src="/component/pear/pear.js"></script>
+    <script>
+        layui.use(['table', 'form', 'jquery', 'dtree', 'common', 'apis','lang'], function () {
+            let table = layui.table;
+            let form = layui.form;
+            let $ = layui.jquery;
+            let dtree = layui.dtree;
+            let common = layui.common;
+            let apis = layui.apis;
+            let laydate = layui.laydate;
+            let lang=layui.lang;
+            let MODULE_PATH = "";
+            //执行一个laydate实例
+            laydate.render({
+                elem: '.time' //指定元素,
+                , format: 'yyyy-MM-dd'
+            });
+            lang.render();
+            //屏幕可工作区域高度
+            var height = window.screen.availHeight - 290;
+            var status = common.GetStatus();
+            var where = { billType: 1 };
+            let cols = [
+                [
+
+                {
+                        title: $.i18n.prop('产品名称'),
+                        field: 'productName',
+                        align: 'center'
+                    },
+                    {
+                        title: $.i18n.prop('产品代码'),
+                        field: 'productCode',
+                        align: 'center'
+                    },
+                    {
+                        title: $.i18n.prop('产品型号'),
+                        width: 150,
+                        field: 'productSpec',
+                        align: 'center'
+                    },
+
+                    {
+                        title: $.i18n.prop('时间'),
+                        align: 'center',
+                        width: 150,
+                        field: 'createTime',
+                        templet: "#tabel-createTime"
+                    },
+                    {
+                        title: $.i18n.prop('操作人'),
+                        align: 'center',
+                        width: 100,
+                        field: 'userName'
+                    },
+                    {
+                        title: $.i18n.prop('状态'),
+                        align: 'center',
+                        width: 150,
+                        templet: function (d) {
+                            return $.i18n.prop(status[d.status]);
+                        }
+                    },
+                    {
+                        title: $.i18n.prop('操作'),
+                        align: 'center',
+                        width: 150,
+                        toolbar: "#table-bar"
+                    }
+                ]
+            ]
+
+            var where = { 'billType': 2 };
+            table_table = table.render({
+                id: 'table_table',
+                elem: '#table-table',
+                url: apis.GetBillPageList,
+                where: where,
+                page: { layout: ['prev', 'page', 'next', 'count'], countText: [$.i18n.prop('共') + ' ', ' ' + $.i18n.prop('条')] },
+                text:{none:$.i18n.prop('无数据')},
+                cols: cols,
+                skin: 'line',
+                //toolbar: false,
+                totalRow: true,
+                defaultToolbar: false,
+                toolbar: '#wms-toolbar',
+                request: {
+                    pageName: 'pageIndex',//页码的参数名称，默认：page
+                    limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                },
+                response: {
+                    statusCode: "200"
+                }
+            });
+            table.on('toolbar(table-table)', function (obj) {
+                if (obj.event === 'add') {
+                    window.add();
+                } else if (obj.event === 'refresh') {
+                    window.refresh();
+                } else if (obj.event === 'batchRemove') {
+                    window.batchRemove(obj);
+                }
+            });
+            form.on('submit(table-query)', function (data) {
+                where = $.extend(where, data.field);
+                table.reload("table_table", { where: where, page: { curr: 1 } });
+                return false;
+            });
+
+            table.on('tool(table-table)', function (obj) {
+                if (obj.event === 'remove') {
+                    window.remove(obj);
+                } else if (obj.event === 'detail') {
+                    window.detail(obj);
+                } else if (obj.event === 'backproductno') {
+                    window.backproductno(obj);
+                } else if (obj.event === 'setting') {
+                    window.Setting(obj);
+                }
+            });
+
+            window.remove = function (obj) {
+                layer.confirm($.i18n.prop('确定要删除该出库单'), {
+                    icon: 3,
+                    title: $.i18n.prop('提示')
+                }, function (index) {
+                    layer.close(index);
+                    common.post(function (res) {
+                        layer.msg($.i18n.prop("删除成功"), { icon: 1, time: 2000, end: function () { window.refresh(); } });
+                    }, apis.DeleteBills + "?billId=" + obj.data["id"]);
+                });
+            }
+
+            window.detail = function (obj) {
+                layer.open({
+                    type: 2,
+                    title: $.i18n.prop('出库明细'),
+                    shade: 0.1,
+                    area: ['1200px', '600px'],
+                    content: '/view/stockout/stockoutdetail/index.html?billId=' + escape(obj.data.id),
+                    end: function () {
+                        table_table.reload();
+                    }
+                });
+            };
+
+            window.Setting = function (obj) {
+                layer.open({
+                    type: 2,
+                    title: '批次设置',
+                    shade: 0.1,
+                    area: ['1200px', '600px'],
+                    content: '/view/stockout/stockoutdetail/setbatchcode.html?billId=' + escape(obj.data.id),
+                    end: function () {
+                        table_table.reload();
+                    }
+                });
+            };
+            window.backproductno = function (obj) {
+                console.log(obj);
+                layer.open({
+                    type: 2,
+                    title: '回填产品编号',
+                    shade: 0.1,
+                    area: ['1000px', '500px'],
+                    content: 'backproductno.html?productIds=' + escape(obj.data.productId) + "&billId=" + escape(obj.data.id),
+                    end: function () {
+                        table_table.reload();
+                    }
+                });
+            };
+            window.refresh = function (param) {
+                table.reload('table_table');
+            }
+        })
+    </script>
+</body>
+
+</html>

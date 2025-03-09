@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta id="i18n_pagename" content="basic-common" />
+    <title>添加物料</title>
+    <link rel="stylesheet" href="/component/pear/css/pear.css" />
+
+</head>
+
+<body>
+    <form class="layui-form" lay-filter="wms-form" action="javascript:void(0);"
+        onkeydown="if(event.keyCode==13)return false;">
+        <div class="mainBox">
+            <div class="main-container">
+                <div class="layui-form-item">
+                    <div class="layui-col-md6 layui-col-xs6 ">
+                        <label class="layui-form-label" data-i18n-text="物料名称"></label>
+                        <div class="layui-input-block">
+                            <input type="text" data-i18n-placeholder="物料名称" name="name" class="layui-input"
+                                lay-verify="required|checkmaterialName" />
+                        </div>
+                    </div>
+                    <div class="layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="物料代码"></label>
+                        <div class="layui-input-block">
+                            <input type="text" data-i18n-placeholder="物料代码" name="code" class="layui-input"
+                                lay-verify="required|checkmaterialName" />
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class=" layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="物料型号"></label>
+                        <div class="layui-input-block">
+                            <input type="text" data-i18n-placeholder="物料型号" id="spec" name="spec" class="layui-input" />
+                        </div>
+                    </div>
+                    <div class="layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="质量等级"></label>
+                        <div class="layui-input-block">
+                            <input type="text" data-i18n-placeholder="质量等级" name="grade" class="layui-input" />
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class=" layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="计量单位"></label>
+                        <div class="layui-input-block">
+                            <input type="text" data-i18n-placeholder="计量单位" name="unit" class="layui-input" />
+
+                        </div>
+                    </div>
+                    <div class="layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="条码"></label>
+                        <div class="layui-input-block">
+                            <input type="text" data-i18n-placeholder="条码" name="barCode" class="layui-input"
+                                lay-verify="checkMaterialBarCode" />
+
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class=" layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="重量"></label>
+                        <div class="layui-input-block">
+                            <input type="text" data-i18n-placeholder="重量" name="weight" class="layui-input" value="0" />
+                        </div>
+                    </div>
+                    <div class=" layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="创建产品"></label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" name="isCreateProduct" lay-filter="isCreateProduct" lay-skin="switch"
+                            data-i18n-lay-text="是|否" checked />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bottom">
+            <div class="button-container">
+                <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit lay-filter="formSubmit">
+                    <i class="layui-icon layui-icon-ok"></i>
+                   <span data-i18n-text="提交"></span>
+                </button>
+            </div>
+        </div>
+    </form>
+    <script src="/component/preview/js/jquery.js"></script>
+    <script src="/component/i18n/jquery.i18n.properties.js"></script>
+    <script src="/component/layui/layui.js"></script>
+    <script src="/component/pear/pear.js"></script>
+    <script>
+        layui.use(['form', 'common', 'apis', 'lang'], function () {
+            var $ = layui.$,
+                form = layui.form,
+                common = layui.common,
+                apis = layui.apis,
+                lang = layui.lang,
+                layer = layui.layer;
+            lang.render();
+            form.render();
+            //表单验证
+            form.verify({
+                checkmaterialName: function (value, item) {
+                    var material = form.val("wms-form");
+                    var count = false;
+                    common.post(function (res) {
+                        count = res;
+                    }, apis.CheckMaterial, material);
+                    if (count)
+                        return $.i18n.prop("物料已经存在");
+                },
+                checkMaterialBarCode: function (value, item) {
+                    var count = false;
+                    common.get(function (res) {
+                        count = res;
+                    }, apis.CheckMaterialBarCode, { barCode: value });
+                    if (count)
+                        return $.i18n.prop("物料条码已经存在");
+                }
+            });
+            //表单提交
+            form.on("submit(formSubmit)", function (data) {
+                var form_data = form.val("wms-form");
+                form_data.isCreateProduct = form_data.isCreateProduct === 'on' ? true : false;
+                common.post(function (res) {
+                    layer.msg($.i18n.prop('提交成功'), {
+                        icon: 1, time: 2000, end: function () {
+                            parent.layer.closeAll();
+                        }
+                    });
+                }, apis.AddMaterial, form_data);
+            });
+        })
+    </script>
+</body>
+
+</html>

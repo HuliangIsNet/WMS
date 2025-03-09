@@ -1,0 +1,184 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>乾德智能仓储管理系统-智慧大屏</title>
+    <script type="text/javascript" src="/component/preview/js/jquery.js"></script>
+    <script type="text/javascript" src="/component/preview/js/echarts.min.js"></script>
+    <script type="text/javascript" src="/component/preview/js/china.js"></script>
+    <script type="text/javascript" src="/component/preview/js/js.js"></script>
+    <link rel="stylesheet" href="/component/preview/css/style.css">
+</head>
+
+<body>
+    <div class="head clearfix">
+
+        <h1 class="pulll_left">乾德智能仓储管理系统-智慧大屏</h1>
+
+        <div class="time" id="showTime"></div>
+
+    </div>
+    <div class="mainbox">
+        <ul class="clearfix nav1">
+            <li style="width: 22%;">
+                <div class="box">
+                    <div class="tit">入库记录</div>
+                    <div class="boxnav" style="height: 200px;">
+                        <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0">
+
+                            <tr>
+                                <th>名称</th>
+                                <th>数量</th>
+                                <th>设备</th>
+                                <th>时间</th>
+                            </tr>
+                            <tbody id="tr_input">
+                                <!-- <tr>
+                                    <td>变压器1</td>
+                                    <td>3</td>
+                                    <td>一号智能库</td>
+                                    <td>05.30</td>
+                                </tr> -->
+                                <tr>
+                                    <td colspan="4" style="font-size: 20;">无入库数据</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="box">
+                    <div class="tit">运营分析</div>
+                    <div class="boxnav" style="height: 300px;">
+                        <ul class="ybp clearfix">
+                            <li id="echart5">
+                            </li>
+                            <li id="echart6">
+                            </li>
+                            <li id="echart7">
+                            </li>
+                            <li id="echart8">
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <li style="width: 56%;">
+                <div class="box">
+                    <div class="boxnav mapc" style="height: 600px; position: relative;">
+                        <div class="mapnav" id="message">
+
+                        </div>
+                        <div class="map" id="map">
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li style="width: 22%;">
+                <div class="box">
+                    <div class="tit">出库记录</div>
+                    <div class="boxnav" style="height: 200px;">
+                        <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0">
+
+                            <tr>
+                                <th>产品</th>
+                                <th>数量</th>
+                                <th>设备</th>
+                                <th>时间</th>
+                            </tr>
+                            <tbody id="tr_output">
+                                <!-- <tr>
+                                        <td>变压器1</td>
+                                        <td>3</td>
+                                        <td>一号智能库</td>
+                                        <td>05.30</td>
+                                    </tr> -->
+                                <tr>
+                                    <td colspan="4" style="font-size: 20;">无出库数据</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="box">
+                    <div class="tit">使用状况</div>
+                    <div class="boxnav" style="height: 300px;">
+                        <div class="" style="height: 200px;" id="echart1">
+                        </div>
+                        <div>
+                            <div class="tit">故障次数</div>
+                            <div id="ul_warn" class="leidanav" style="padding-top: 10;">
+                                <ul class="clearfix" >
+                                    <li>
+                                        <span>一号货柜</span>
+                                        <p>43</p>
+                                    </li>
+                                    <li>
+                                        <span>二号货柜</span>
+                                        <p>100</p>
+                                    </li>
+                                    <li>
+                                        <span>三号货柜</span>
+                                        <p>28</p>
+                                    </li>
+                                    <li>
+                                        <span>四号货柜</span>
+                                        <p>3</p>
+                                    </li>
+                                    <li>
+                                        <span>五号货柜</span>
+                                        <p>150</p>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <div class="box" style="padding: 20px 0;">
+            <ul class="clearfix nav2">
+                <li style="width: 35%;">
+                    <div class="tit01">入库走势</div>
+                    <div class="ftechart" id="echart2">
+
+                    </div>
+                </li>
+                <li style="width: 40%;">
+                    <div class="tit01">出库走势</div>
+                    <div class="ftechart" id="echart3">
+                    </div>
+                </li>
+                <li style="width: 20%;">
+                    <div class="tit01">存储空间</div>
+                    <div class="ftechart" id="echart4">
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script src="component/layui/layui.js"></script>
+    <script src="component/pear/pear.js"></script>
+    <script>
+        var t = null;
+        function time() {
+            clearTimeout(t), (dt = new Date());
+            var e = dt.getFullYear(),
+                n = dt.getMonth() + 1,
+                d = dt.getDate(),
+                i = dt.getHours(),
+                m = dt.getMinutes(),
+                o = dt.getSeconds();
+            (document.getElementById("showTime").innerHTML =
+                e + "年" + n + "月" + d + "日  " + i + ":" + m + ":" + o),
+                (t = setTimeout(time, 1e3));
+        }
+        t = setTimeout(time, 1e3);
+        layui.use(['preview'], function () {
+            var preview = layui.preview;
+            preview.render();
+        });
+    </script>
+</body>
+
+</html>

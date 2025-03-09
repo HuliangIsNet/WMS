@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta id="i18n_pagename" content="log-common" />
+    <title>日志管理</title>
+    <link rel="stylesheet" href="../../component/pear/css/pear.css" />
+</head>
+
+<body class="pear-container">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form" action="" name="wms-query-from">
+                <div class="layui-form-item">
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label" data-i18n-text="日志类型"></label>
+                        <div class="layui-input-inline">
+                            <select class="layui-select" id="logType" name="logType">
+                                <option value="" data-i18n-text="--请选择--"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label" data-i18n-text="货柜"></label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="containerName" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+
+
+                    <div class="layui-form-item layui-inline">
+                        <button class="pear-btn pear-btn-md pear-btn-primary search" lay-submit lay-filter="wms-query">
+                            <i class="layui-icon layui-icon-search"></i>
+                            <span data-i18n-text="查询"></span>
+                        </button>
+                        <button type="reset" class="pear-btn pear-btn-md">
+                            <i class="layui-icon layui-icon-refresh"></i>
+                              <span data-i18n-text="重置"></span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="wms-table" lay-filter="wms-table"></table>
+        </div>
+    </div>
+    <script src="/component/preview/js/jquery.js"></script>
+    <script src="/component/i18n/jquery.i18n.properties.js"></script>
+    <script src="../../component/layui/layui.js"></script>
+    <script src="../../component/pear/pear.js"></script>
+    <script>
+        layui.use(['table', 'form', 'jquery', 'common', 'apis', 'lang'], function () {
+            let table = layui.table;
+            let form = layui.form;
+            let $ = layui.jquery;
+            let common = layui.common;
+            let apis = layui.apis;
+            let lang = layui.lang;
+            lang.render();
+            form.render();
+            common.get(function (res) {
+                $.each(res, function (i, item) {
+                    $('#logType').append('<option value=' + i + '>' + $.i18n.prop( item )+ '</option>')
+                });
+                // form.val('wms-query-from',res);
+
+                form.render();
+            }, apis.GetLogType);
+
+            let MODULE_PATH = "user-op/";
+
+            let cols = [
+                [
+
+                    {
+                        title: $.i18n.prop('日志内容'),
+                        field: 'content',
+                        align: 'center'
+                    },
+                    {
+                        title: $.i18n.prop('日志类型'),
+                        field: 'logType_Str',
+                        align: 'center'
+                    },
+                    {
+                        title: $.i18n.prop('货柜名称'),
+                        field: 'containerName',
+                        align: 'center',
+                        //templet: function(d) {
+                        //    return d.isOnline ? "在线" : "离线";
+                        //}
+                    },
+
+                    {
+                        title: $.i18n.prop('操作员'),
+                        field: 'userName',
+                        align: 'center'
+                    },
+                    {
+                        title: $.i18n.prop('记录时间'),
+                        field: 'createTime',
+                        align: 'center',
+                        templet: function (d) {
+                            return layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm');
+                        }
+                    },
+                ]
+            ];
+
+            table.render({
+                elem: '#wms-table',
+                url: apis.GetLogList,
+                page: true,
+                cols: cols,
+                skin: 'line',
+                toolbar: false,
+                request: {
+                    pageName: 'pageIndex',//页码的参数名称，默认：page
+                    limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                },
+                response: {
+                    statusCode: "200"
+                }
+            });
+            form.on('submit(wms-query)', function (data) {
+                console.log(data);
+                table.reload('wms-table',
+                    {
+                        where: data.field
+                    });
+                return false;
+            });
+
+
+
+            window.refresh = function (param) {
+                table.reload('wms-table');
+            }
+        })
+    </script>
+</body>
+
+</html>

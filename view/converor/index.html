@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>接驳台管理</title>
+    <link rel="stylesheet" href="/component/pear/css/pear.css" />
+</head>
+
+<body class="pear-container">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">接驳台编号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="no" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">接驳台名称</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="name" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="tray-query">
+                            <i class="layui-icon layui-icon-search"></i>
+                            查询
+                        </button>
+                        <button type="reset" class="pear-btn pear-btn-md">
+                            <i class="layui-icon layui-icon-refresh"></i>
+                            重置
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="tray-table" lay-filter="tray-table"></table>
+        </div>
+    </div>
+
+    <script type="text/html" id="tray-toolbar">
+			<button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
+		        <i class="layui-icon layui-icon-add-1"></i>
+		        新增
+		    </button>
+		    <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove">
+		        <i class="layui-icon layui-icon-delete"></i>
+		        删除
+		    </button>
+		</script>
+
+    <script type="text/html" id="tray-bar">
+			<button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit"><i class="layui-icon layui-icon-edit"></i></button>
+		    <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i class="layui-icon layui-icon-delete"></i></button>
+            <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="barcode"><i class="layui-icon layui-icon-print"></i></button>
+		</script>
+
+    <script src="/component/layui/layui.js"></script>
+    <script src="/component/pear/pear.js"></script>
+    <!-- <script src="http://localhost:8000/CLodopFuncs.js"></script> -->
+    <script src="/component/lodop/LodopFuncs.js"></script>
+    <script>
+        layui.use(['table', 'form', 'jquery', 'common', 'apis'], function () {
+            let table = layui.table;
+            let form = layui.form;
+            let $ = layui.jquery;
+            let common = layui.common;
+            let apis = layui.apis;
+            let layer = layui.layer;
+            let MODULE_PATH = "";
+            var trayType;
+            common.get(function (res) {
+                trayType = res;
+            }, apis.GetTrayTypeList);
+
+            let cols = [
+                [{
+                    type: 'checkbox'
+                },
+                {
+                    title: '名称',
+                    field: 'name',
+                    align: 'center'
+                },
+                {
+                    title: '编号',
+                    field: 'no',
+                    align: 'center'
+                },
+                {
+                    title: '类型',
+                    align: 'center',
+                    templet: function (d) {
+                        var type = trayType.find(x => x.id == d.trayTypeId);
+                        if (type == null)
+                            return "--";
+                        else
+                            return type.name;
+                    }
+                },
+                {
+                    title: '操作',
+                    toolbar: '#tray-bar',
+                    align: 'center',
+                    width: 150
+                }
+                ]
+            ]
+
+            var tray_table = table.render({
+                elem: '#tray-table',
+                url: apis.GetTrayPageList,
+                page: true,
+                cols: cols,
+                skin: 'line',
+                toolbar: '#tray-toolbar',
+                defaultToolbar: [],
+                request: {
+                    pageName: 'pageIndex',//页码的参数名称，默认：page
+                    limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                },
+                response: {
+                    statusCode: "200"
+                }
+            });
+
+            table.on('tool(tray-table)', function (obj) {
+                if (obj.event === 'remove') {
+                    window.remove(obj);
+                } else if (obj.event === 'edit') {
+                    window.edit(obj);
+                }
+                else if (obj.event === 'barcode') {
+                    window.barcode(obj);
+                }
+            });
+
+            table.on('toolbar(tray-table)', function (obj) {
+                if (obj.event === 'add') {
+                    window.add();
+                } else if (obj.event === 'refresh') {
+                    window.refresh();
+                } else if (obj.event === 'batchRemove') {
+                    window.batchRemove(obj);
+                }
+            });
+
+            form.on('submit(tray-query)', function (data) {
+                tray_table.reload({
+                    where: data.field
+                });
+                return false;
+            });
+
+
+            window.add = function () {
+                layer.open({
+                    type: 2,
+                    title: '新增',
+                    shade: 0.1,
+                    area: [common.isModile() ? '100%' : '600px', common.isModile() ? '100%' : '380px'],
+                    content: MODULE_PATH + 'add.html',
+                    end: function () {
+                        window.refresh();
+                    }
+                });
+            }
+
+            window.edit = function (obj) {
+                layer.open({
+                    type: 2,
+                    title: '修改',
+                    shade: 0.1,
+                    area: [common.isModile() ? '100%' : '600px', common.isModile() ? '100%' : '300px'],
+                    content: MODULE_PATH + 'edit.html?trayId=' + obj.data["id"],
+                    end: function () {
+                        window.refresh();
+                    }
+                });
+            }
+
+            window.remove = function (obj) {
+                layer.confirm('确定要删除该料盒', {
+                    icon: 3,
+                    title: '提示'
+                }, function (index) {
+                    layer.close(index);
+                    common.post(function (res) {
+                        layer.msg("删除成功！", { icon: 1, time: 2000, end: function () { window.refresh(); } });
+                    }, apis.DeleteTray,{ ids: obj.data["id"] } );
+                });
+            };
+
+            window.batchRemove = function (obj) {
+
+                var checkIds = common.checkField(obj, 'id');
+
+                if (checkIds === "") {
+                    layer.msg("未选中数据", {
+                        icon: 3,
+                        time: 1000
+                    });
+                    return false;
+                }
+
+                layer.confirm('确定要删除这些料盒', {
+                    icon: 3,
+                    title: '提示'
+                }, function (index) {
+                    layer.close(index);
+                    common.post(function (res) {
+                        layer.msg("删除成功！", { icon: 1, time: 2000, end: function () { window.refresh(); } });
+                    }, apis.DeleteTray,{ ids: checkIds.toString() } );
+                });
+            };
+            window.barcode = function (obj) {
+                var LODOP = getLodop();
+                LODOP.PRINT_INIT("");
+                LODOP.SET_PRINT_PAGESIZE(1, 600, 400, 'strPageName');
+                LODOP.ADD_PRINT_TEXT("2mm", "20mm", "25mm", "10mm", obj.data.name);
+                LODOP.ADD_PRINT_BARCODE("8mm","3mm", "55mm","30mm", '128Auto', obj.data.barCode);
+                //LODOP.PREVIEW();
+                LODOP.PRINT();
+            };
+            window.refresh = function (param) {
+                tray_table.reload({page:{curr:1}});
+            };
+        })
+    </script>
+</body>
+
+</html>

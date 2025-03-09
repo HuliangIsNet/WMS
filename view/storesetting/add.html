@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>添加存储设置</title>
+    <link rel="stylesheet" href="/component/pear/css/pear.css" />
+
+</head>
+
+<body>
+    <form class="layui-form" lay-filter="wms-form" action="javascript:void(0);"
+        onkeydown="if(event.keyCode==13)return false;">
+        <div class="mainBox">
+            <div class="main-container">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">货柜名称:</label>
+                    <div class="layui-input-block">
+                        <select id="sel_Container" name="containerId" lay-filter="sel_Container" autocomplete="off">
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">料斗名称:</label>
+                    <div class="layui-input-block">
+                        <select id="sel_Hopper" name="hopperId" lay-filter="sel_Hopper" lay-search autocomplete="off">
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">工位信息:</label>
+                    <div class="layui-input-block">
+                        <select id="sel_LayoutDetailId" name="layoutDetailId" autocomplete="off">
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">状态:</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="state" lay-skin="switch" lay-filter="state" checked
+                            lay-text="启用|停用">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">产品名称:</label>
+                    <div class="layui-input-block">
+                        <select class="layui-select" id="sel_Product" name="productId" lay-search></select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="bottom">
+            <div class="button-container">
+                <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit lay-filter="formSubmit">
+                    <i class="layui-icon layui-icon-ok"></i>
+                    提交
+                </button>
+            </div>
+        </div>
+    </form>
+    <script src="/component/layui/layui.js"></script>
+    <script src="/component/pear/pear.js"></script>
+    <script src="/component/lodop/LodopFuncs.js"></script>
+    <script>
+        layui.use(['form', 'common', 'apis'], function () {
+            var $ = layui.$,
+                form = layui.form,
+                common = layui.common,
+                apis = layui.apis,
+                laydate = layui.laydate,
+                layer = layui.layer;
+
+            //货柜
+            common.get(function (res) {
+                layui.each(res, function (i, item) {
+                    $("#sel_Container").append(new Option(item.name, item.id));
+                    if (i == 0) {
+                        GetHopperList(item.id);
+                    }
+                });
+            }, apis.GetContainerList);
+            //产品
+            common.get(function (res) {
+                $("#sel_Product").append(new Option('请选择',0));
+                layui.each(res, function (i, item) {
+                    $("#sel_Product").append(new Option(item.name, item.id));
+                });
+            }, apis.GetProductList);
+
+            form.render('select');
+            form.on('select(sel_Container)', function (e) {
+                GetHopperList(e.value);
+            });
+            form.on('select(sel_Hopper)', function (e) {
+                GetLayoutDetail(e.value);
+            });
+            function GetHopperList(contaierId) {
+                $("#sel_Hopper").empty();
+                common.get(function (res) {
+                    layui.each(res, function (i, item) {
+                        $("#sel_Hopper").append(new Option(item.name, item.id));
+                        if (i == 0) {
+                            GetLayoutDetail(item.id);
+                        }
+                    });
+                    form.render('select');
+                }, apis.GetHopperList, { containerId: contaierId });
+            }
+
+            function GetLayoutDetail(hopperId) {
+                $("#sel_LayoutDetailId").empty();
+                common.get(function (res) {
+                    layui.each(res, function (i, item) {
+                        $("#sel_LayoutDetailId").append(new Option(item.name, item.id));
+                    });
+                    form.render('select');
+                }, apis.GetLayoutDetialByHopperId, { hopperId: hopperId });
+            }
+
+
+            //表单提交
+            form.on("submit(formSubmit)", function (data) {
+                var form_data = form.val("wms-form");
+                form_data.state = form_data.state === 'on' ? 0 : 1;
+                common.post(function (res) {
+                    layer.msg('保存成功', {
+                        icon: 1, time: 2000, end: function () {
+                            parent.layer.closeAll();
+                        }
+                    });
+                }, apis.AddStoreSetting, form_data);
+            });
+        })
+    </script>
+</body>
+
+</html>

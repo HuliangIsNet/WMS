@@ -1,0 +1,555 @@
+{
+	"code":1,
+	"data": [
+		{
+			"id": "1494189201736675329",
+			"pid": "0",
+			"children": [
+				{
+					"id": "1494189269738926082",
+					"pid": "1494189201736675329",
+					"children": [
+						{
+							"id": "1494189324411678721",
+							"pid": "1494189269738926082",
+							"children": [
+								{
+									"id": "1494189485682667522",
+									"pid": "1494189324411678721",
+									"children": [
+										{
+											"id": "1494189547921944578",
+											"pid": "1494189485682667522",
+											"children": [],
+											"productName": "fan部组件217",
+											"productType": "5",
+											"secretLevel": "10",
+											"productCode": "fan部组件217"
+										}
+									],
+									"productName": "fan二级单机217",
+									"productType": "4",
+									"secretLevel": "10",
+									"productCode": "fan二级单机217"
+								}
+							],
+							"productName": "fan单机217",
+							"productType": "3",
+							"secretLevel": "10",
+							"productCode": "fan单机217"
+						},
+						{
+							"id": "1494248474244136961",
+							"pid": "1494189269738926082",
+							"children": [],
+							"productName": "fan单机217新增",
+							"productType": "3",
+							"secretLevel": "10",
+							"productCode": "fan单机217新增"
+						}
+					],
+					"productName": "fan分系统217",
+					"productType": "2",
+					"secretLevel": "20",
+					"productCode": "fan分系统217"
+				},
+				{
+					"id": "1496004569862066178",
+					"pid": "1494189201736675329",
+					"children": [],
+					"productName": "fan分系统222",
+					"productType": "2",
+					"secretLevel": "20",
+					"productCode": "fan分系统222fan分系统222fan分系统222"
+				}
+			],
+			"productName": "fan型号217",
+			"productType": "1",
+			"secretLevel": "20",
+			"productCode": "fan型号217"
+		},
+		{
+			"id": "1494191722014257154",
+			"pid": "0",
+			"children": [],
+			"productName": "WY产品型号测试",
+			"productType": "1",
+			"secretLevel": "0",
+			"productCode": "d01"
+		},
+		{
+			"id": "1494194923597803522",
+			"pid": "0",
+			"children": [],
+			"productName": "wy-0217-产品型号",
+			"productType": "1",
+			"secretLevel": "0",
+			"productCode": "阿萨"
+		},
+		{
+			"id": "1494604286506352642",
+			"pid": "0",
+			"children": [
+				{
+					"id": "1494605264928423938",
+					"pid": "1494604286506352642",
+					"children": [
+						{
+							"id": "1494605373057581058",
+							"pid": "1494605264928423938",
+							"children": [],
+							"productName": "1111111111",
+							"productType": "3",
+							"secretLevel": "0",
+							"productCode": "ddd1"
+						},
+						{
+							"id": "1499636216255832065",
+							"pid": "1494605264928423938",
+							"children": [],
+							"productName": "562",
+							"productType": "3",
+							"secretLevel": "0",
+							"productCode": "222"
+						}
+					],
+					"productName": "0218分系统",
+					"productType": "2",
+					"secretLevel": "0",
+					"productCode": "ddd"
+				},
+				{
+					"id": "1499632054067617794",
+					"pid": "1494604286506352642",
+					"children": [
+						{
+							"id": "1499633399470317570",
+							"pid": "1499632054067617794",
+							"children": [],
+							"productName": "22higw",
+							"productType": "3",
+							"secretLevel": "0",
+							"productCode": "22"
+						}
+					],
+					"productName": "测试子节点",
+					"productType": "2",
+					"secretLevel": "0",
+					"productCode": "11"
+				},
+				{
+					"id": "1499633297993326594",
+					"pid": "1494604286506352642",
+					"children": [
+						{
+							"id": "1499633355237187586",
+							"pid": "1499633297993326594",
+							"children": [
+								{
+									"id": "1499637881109307394",
+									"pid": "1499633355237187586",
+									"children": [],
+									"productName": "1",
+									"productType": "4",
+									"secretLevel": "0",
+									"productCode": "1"
+								}
+							],
+							"productName": "333",
+							"productType": "3",
+							"secretLevel": "0",
+							"productCode": "333"
+						}
+					],
+					"productName": "111",
+					"productType": "2",
+					"secretLevel": "0",
+					"productCode": "11"
+				}
+			],
+			"productName": "0218w一棵树",
+			"productType": "1",
+			"secretLevel": "0",
+			"productCode": "222"
+		},
+		{
+			"id": "1494606878384898050",
+			"pid": "0",
+			"children": [],
+			"productName": "测试导入",
+			"productType": "1",
+			"secretLevel": "0",
+			"productCode": "da1"
+		},
+		{
+			"id": "1498220147242778625",
+			"pid": "0",
+			"children": [],
+			"productName": "0228",
+			"productType": "1",
+			"secretLevel": "10",
+			"productCode": "123123122132131232312312312312"
+		},
+		{
+			"id": "1498528352095301633",
+			"pid": "0",
+			"children": [],
+			"productName": "228",
+			"productType": "1",
+			"secretLevel": "20",
+			"productCode": "1"
+		},
+		{
+			"id": "1498918941437575169",
+			"pid": "0",
+			"children": [
+				{
+					"id": "1498938222690811906",
+					"pid": "1498918941437575169",
+					"children": [],
+					"productName": "fan分系统32fan分系统32fan分系统32",
+					"productType": "2",
+					"secretLevel": "30",
+					"productCode": "fan分系统32fan分系统32fan分系统32fan分系统"
+				},
+				{
+					"id": "1498941022120296450",
+					"pid": "1498918941437575169",
+					"children": [],
+					"productName": "新增不授权分系统子节点",
+					"productType": "2",
+					"secretLevel": "30",
+					"productCode": "新增不授权分系统子节点"
+				}
+			],
+			"productName": "fan型号32fan型号32fan型号32fan型号32fa",
+			"productType": "1",
+			"secretLevel": "30",
+			"productCode": "fan型号32fan型号32fan型号32fan型号32fa"
+		},
+		{
+			"id": "1498945541067620353",
+			"pid": "0",
+			"children": [
+				{
+					"id": "1498945732139139073",
+					"pid": "1498945541067620353",
+					"children": [
+						{
+							"id": "1498946209690009601",
+							"pid": "1498945732139139073",
+							"children": [],
+							"productName": "fan新增单机32",
+							"productType": "3",
+							"secretLevel": "30",
+							"productCode": "fan新增单机32"
+						},
+						{
+							"id": "1499656484337168386",
+							"pid": "1498945732139139073",
+							"children": [],
+							"productName": "111111",
+							"productType": "3",
+							"secretLevel": "0",
+							"productCode": "111"
+						},
+						{
+							"id": "1500759213006413825",
+							"pid": "1498945732139139073",
+							"children": [],
+							"productName": "123",
+							"productType": "3",
+							"secretLevel": "0",
+							"productCode": "123"
+						},
+						{
+							"id": "1500764407708737538",
+							"pid": "1498945732139139073",
+							"children": [],
+							"productName": "321",
+							"productType": "3",
+							"secretLevel": "0",
+							"productCode": "123"
+						}
+					],
+					"productName": "fan新增分系统32",
+					"productType": "2",
+					"secretLevel": "30",
+					"productCode": "fan新增分系统32"
+				},
+				{
+					"id": "1498946106308804609",
+					"pid": "1498945541067620353",
+					"children": [],
+					"productName": "fan新增分系统32fan新增分系统321111",
+					"productType": "2",
+					"secretLevel": "40",
+					"productCode": "fan新增分系统32"
+				}
+			],
+			"productName": "fan新增型号32",
+			"productType": "1",
+			"secretLevel": "40",
+			"productCode": "fan新增型号32"
+		},
+		{
+			"id": "1498947768452759554",
+			"pid": "0",
+			"children": [
+				{
+					"id": "1498947768461148161",
+					"pid": "1498947768452759554",
+					"children": [],
+					"productName": "fan新增部组件32",
+					"productType": "5",
+					"secretLevel": "30",
+					"productCode": "fan新增部组件32"
+				}
+			],
+			"productName": "fan新增二级单机32",
+			"productType": "4",
+			"secretLevel": "40",
+			"productCode": "fan新增二级单机32"
+		},
+		{
+			"id": "1499265638810374145",
+			"pid": "0",
+			"children": [],
+			"productName": "20220303",
+			"productType": "1",
+			"secretLevel": "0",
+			"productCode": "20220303"
+		},
+		{
+			"id": "1499266020949217281",
+			"pid": "0",
+			"children": [],
+			"productName": "202203033",
+			"productType": "1",
+			"secretLevel": "0",
+			"productCode": "202203033"
+		},
+		{
+			"id": "1499271932039262210",
+			"pid": "0",
+			"children": [],
+			"productName": "202203032",
+			"productType": "1",
+			"secretLevel": "0",
+			"productCode": "202203032"
+		},
+		{
+			"id": "1499566805914324993",
+			"pid": "0",
+			"children": [],
+			"productName": "008新增型号",
+			"productType": "1",
+			"secretLevel": "0",
+			"productCode": "d008"
+		},
+		{
+			"id": "1500742725688123394",
+			"pid": "0",
+			"children": [
+				{
+					"id": "1500742725755232257",
+					"pid": "1500742725688123394",
+					"children": [
+						{
+							"id": "1500742725818146817",
+							"pid": "1500742725755232257",
+							"children": [],
+							"productName": "1",
+							"productType": "3",
+							"secretLevel": "0",
+							"productCode": "1"
+						},
+						{
+							"id": "1500746786730696705",
+							"pid": "1500742725755232257",
+							"children": [],
+							"productName": "0218w一棵树",
+							"productType": "3",
+							"secretLevel": "0",
+							"productCode": "测试001"
+						}
+					],
+					"productName": "MY-分系统",
+					"productType": "2",
+					"secretLevel": "0",
+					"productCode": "222"
+				},
+				{
+					"id": "1500747073977606146",
+					"pid": "1500742725688123394",
+					"children": [],
+					"productName": "0218分系统",
+					"productType": "2",
+					"secretLevel": "0",
+					"productCode": "测试分系统"
+				}
+			],
+			"productName": "MY型号",
+			"productType": "1",
+			"secretLevel": "0",
+			"productCode": "001"
+		},
+		{
+			"id": "1501070300310450177",
+			"pid": "0",
+			"children": [
+				{
+					"id": "1501070416480088066",
+					"pid": "1501070300310450177",
+					"children": [
+						{
+							"id": "1501081034171895809",
+							"pid": "1501070416480088066",
+							"children": [],
+							"productName": "dmy22",
+							"productType": "2",
+							"secretLevel": "0",
+							"productCode": "dmy22"
+						}
+					],
+					"productName": "dmy2",
+					"productType": "2",
+					"secretLevel": "0",
+					"productCode": "dmy2"
+				},
+				{
+					"id": "1501081034046066689",
+					"pid": "1501070300310450177",
+					"children": [],
+					"productName": "dmy1",
+					"productType": "1",
+					"secretLevel": "0",
+					"productCode": "dmy1"
+				},
+				{
+					"id": "1501081034046066690",
+					"pid": "1501070300310450177",
+					"children": [],
+					"productName": "dmy3",
+					"productType": "1",
+					"secretLevel": "0",
+					"productCode": "dmy3"
+				}
+			],
+			"productName": "dmy测试型号",
+			"productType": "1",
+			"secretLevel": "0",
+			"productCode": "dmy"
+		},
+		{
+			"id": "1501453413865353218",
+			"pid": "0",
+			"children": [],
+			"productName": "jihuadiaoduzhiliang",
+			"productType": "3",
+			"secretLevel": "0",
+			"productCode": "jihuadiaoduzhiliang"
+		},
+		{
+			"id": "1501453521453445121",
+			"pid": "0",
+			"children": [],
+			"productName": "jihuadiaoduzhiliang1",
+			"productType": "3",
+			"secretLevel": "0",
+			"productCode": "jihuadiaoduzhiliang1"
+		},
+		{
+			"id": "1501454810912518145",
+			"pid": "0",
+			"children": [],
+			"productName": "fan新增二级单机321",
+			"productType": "4",
+			"secretLevel": "40",
+			"productCode": "fan新增二级单机321"
+		},
+		{
+			"id": "1501454810925101058",
+			"pid": "0",
+			"children": [],
+			"productName": "fan新增部组件321",
+			"productType": "5",
+			"secretLevel": "30",
+			"productCode": "fan新增部组件321"
+		},
+		{
+			"id": "1501473347540918273",
+			"pid": "0",
+			"children": [],
+			"productName": "fan二级单机218",
+			"productType": "3",
+			"secretLevel": "0",
+			"productCode": "fan218"
+		},
+		{
+			"id": "1501473470882816001",
+			"pid": "0",
+			"children": [],
+			"productName": "fan二级单机219",
+			"productType": "3",
+			"secretLevel": "0",
+			"productCode": "fan219"
+		},
+		{
+			"id": "1501473828908605441",
+			"pid": "0",
+			"children": [],
+			"productName": "fan二级单机220",
+			"productType": "3",
+			"secretLevel": "0",
+			"productCode": "fan220"
+		},
+		{
+			"id": "1501474932075130882",
+			"pid": "0",
+			"children": [
+				{
+					"id": "1501475378521042945",
+					"pid": "1501474932075130882",
+					"children": [
+						{
+							"id": "1501476592700747777",
+							"pid": "1501475378521042945",
+							"children": [],
+							"productName": "单机",
+							"productType": "3",
+							"secretLevel": "0",
+							"productCode": "单机11"
+						}
+					],
+					"productName": "MY分系统",
+					"productType": "2",
+					"secretLevel": "0",
+					"productCode": "MY分系统"
+				}
+			],
+			"productName": "MY型号（勿删）",
+			"productType": "1",
+			"secretLevel": "0",
+			"productCode": "MY型号（勿删）"
+		},
+		{
+			"id": "1501482697615048706",
+			"pid": "0",
+			"children": [],
+			"productName": "0309",
+			"productType": "1",
+			"secretLevel": "0",
+			"productCode": "是"
+		},
+		{
+			"id": "1501487388222652417",
+			"pid": "0",
+			"children": [],
+			"productName": "111",
+			"productType": "1",
+			"secretLevel": "0",
+			"productCode": "1111111"
+		}
+	]
+}

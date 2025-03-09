@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>物料存储</title>
+    <link rel="stylesheet" href="/component/pear/css/pear.css" />
+</head>
+
+<body class="pear-container">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">物料名称</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="materialName" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">托盘名称</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="trayName" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="material-query">
+                            <i class="layui-icon layui-icon-search"></i>
+                            查询
+                        </button>
+                        <button type="reset" class="pear-btn pear-btn-md">
+                            <i class="layui-icon layui-icon-refresh"></i>
+                            重置
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="material-table" lay-filter="material-table"></table>
+        </div>
+    </div>
+
+    <script type="text/html" id="material-toolbar">
+			<button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
+		        <i class="layui-icon layui-icon-add-1"></i>
+		        新增
+		    </button>
+		    <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove">
+		        <i class="layui-icon layui-icon-delete"></i>
+		        删除
+		    </button>
+		</script>
+
+    <script type="text/html" id="material-bar">
+			<button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit"><i class="layui-icon layui-icon-edit"></i></button>
+		    <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i class="layui-icon layui-icon-delete"></i></button>
+		</script>
+
+    <script src="/component/layui/layui.js"></script>
+    <script src="/component/pear/pear.js"></script>
+    <script>
+        layui.use(['table', 'form', 'jquery', 'common', 'apis', 'upload'], function () {
+            let table = layui.table;
+            let form = layui.form;
+            let $ = layui.jquery;
+            let common = layui.common;
+            let apis = layui.apis;
+            let upload = layui.upload;
+            let layer = layui.layer;
+            let MODULE_PATH = "";
+
+            let cols = [
+                [{
+                    type: 'checkbox'
+                },
+                {
+                    title: '物料名称',
+                    field: 'materialName',
+                    align: 'center'
+                },
+                {
+                    title: '图代号',
+                    field: 'code',
+                    align: 'center'
+                },
+                {
+                    title: '规格型号',
+                    field: 'spec',
+                    align: 'center'
+                },
+                {
+                    title: '质量等级',
+                    field: 'grade',
+                    align: 'center'
+                },
+                {
+                    title: '托盘名称',
+                    field: 'trayName',
+                    align: 'center'
+                },
+                {
+                    title: '最大存储量',
+                    field: 'max_Count',
+                    align: 'center'
+                },
+                {
+                    title: '警戒存储量',
+                    field: 'warning_Count',
+                    align: 'center'
+                },
+               
+                {
+                    title: '操作',
+                    toolbar: '#material-bar',
+                    align: 'center',
+                    width: 130
+                }
+                ]
+            ]
+
+            var material_table = table.render({
+                elem: '#material-table',
+                url: apis.GetMaterialStoragePageList,
+                page: true,
+                cols: cols,
+                skin: 'line',
+                toolbar: '#material-toolbar',
+                defaultToolbar: [{
+                    title: '刷新',
+                    layEvent: 'refresh',
+                    icon: 'layui-icon-refresh',
+                }, 'filter', 'print', 'exports'],
+                request: {
+                    pageName: 'pageIndex',//页码的参数名称，默认：page
+                    limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                },
+                response: {
+                    statusCode: "200"
+                }
+            });
+
+            table.on('tool(material-table)', function (obj) {
+                if (obj.event === 'remove') {
+                    window.remove(obj);
+                } else if (obj.event === 'edit') {
+                    window.edit(obj);
+                }
+            });
+
+            table.on('toolbar(material-table)', function (obj) {
+                if (obj.event === 'add') {
+                    window.add();
+                } else if (obj.event === 'refresh') {
+                    window.refresh();
+                } else if (obj.event === 'batchRemove') {
+                    window.batchRemove(obj);
+                }
+            });
+
+            form.on('submit(material-query)', function (data) {
+                material_table.reload({
+                    where: data.field
+                });
+                return false;
+            });
+            window.add = function () {
+                layer.open({
+                    type: 2,
+                    title: '新增',
+                    shade: 0.1,
+                    area: [common.isModile() ? '100%' : '800px', common.isModile() ? '100%' : '400px'],
+                    content: MODULE_PATH + 'add.html',
+                    end: function () {
+                        window.refresh();
+                    }
+                });
+            }
+
+            window.edit = function (obj) {
+                layer.open({
+                    type: 2,
+                    title: '修改',
+                    shade: 0.1,
+                    area: [common.isModile() ? '100%' : '800px', common.isModile() ? '100%' : '400px'],
+                    content: MODULE_PATH + 'edit.html?materialStorageId=' + obj.data["id"],
+                    end: function () {
+                        window.refresh();
+                    }
+                });
+            }
+
+            window.remove = function (obj) {
+                layer.confirm('确定要删除该物料存储信息', {
+                    icon: 3,
+                    title: '提示'
+                }, function (index) {
+                    layer.close(index);
+                    let loading = layer.load();
+                    common.post({ ids: obj.data["id"] }, apis.DeleteMaterialStorage, null, function (res) {
+                        layer.close(loading);
+                        layer.msg("删除成功！", { icon: 1, time: 2000, end: function () { window.refresh(); } });
+                    });
+                });
+            };
+
+            window.batchRemove = function (obj) {
+
+                var checkIds = common.checkField(obj, 'id');
+
+                if (checkIds === "") {
+                    layer.msg("未选中数据", {
+                        icon: 3,
+                        time: 1000
+                    });
+                    return false;
+                }
+
+                layer.confirm('确定要删除这些物料存储信息', {
+                    icon: 3,
+                    title: '提示'
+                }, function (index) {
+                    layer.close(index);
+                    let loading = layer.load();
+                    common.post({ ids: checkIds.toString() }, apis.DeleteMaterialStorage, null, function (res) {
+                        layer.close(loading);
+                        layer.msg("删除成功！", { icon: 1, time: 2000, end: function () { window.refresh(); } });
+                    });
+                });
+            };
+
+            window.refresh = function (param) {
+                material_table.reload();
+            };
+        })
+    </script>
+</body>
+
+</html>

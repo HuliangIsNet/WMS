@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>日志管理</title>
+    <link rel="stylesheet" href="/component/pear/css/pear.css" />
+    <link rel="stylesheet" href="/admin/css/other/department.css" />
+</head>
+
+<body class="pear-container">
+    <div class="layui-row layui-col-space16" style="width:1900px">
+        <!--<div class="layui-col-md2">-->
+            <!--<div class="layui-card">
+                <div class="layui-card-body">-->
+                    <!--<div class="layui-inline">
+                        <input type="text" class="layui-input" autocomplete="off" oninput="window.QueryTree(this)"
+                               onblur="window.QueryTree(this)" />
+                    </div>-->
+                    <!--<div id="productTreeContent" style="overflow: auto;padding-top: 10px;">
+                        <ul id="productTree" class="dtree organizationTree" data-id="9527"></ul>
+                    </div>-->
+                <!--</div>
+            </div>-->
+        <!--</div>-->
+        <div class="layui-col-md10">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <form class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <div class=" layui-col-md4 layui-col-xs4">
+                                <label class="layui-form-label">操作员</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="operation" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class=" layui-col-md4 layui-col-xs4">
+                                <label class="layui-form-label">货柜</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="key" autocomplete="off" class="layui-input ">
+                                </div>
+                            </div>
+                            <!--<div class=" layui-col-md4 layui-col-xs4">
+                                <label class="layui-form-label">供应商</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="manufacturers" autocomplete="off" class="layui-input ">
+                                </div>
+                            </div>-->
+                        </div>
+                        <div class="layui-form-item">
+                            <div class=" layui-col-md4 layui-col-xs4">
+                                <label class="layui-form-label">时间</label>
+                                <div class="layui-input-inline" style="width: 83px;">
+                                    <input type="text" name="start_Time" autocomplete="off" readonly
+                                           class="layui-input time">
+                                </div>
+                                <div class="layui-form-mid">
+                                    -
+                                </div>
+                                <div class="layui-input-inline" style="width: 83px;">
+                                    <input type="text" name="end_Time" autocomplete="off" readonly
+                                           class="layui-input time">
+                                </div>
+                            </div>
+                            <!--<div class=" layui-col-md4 layui-col-xs4">
+                                <label class="layui-form-label">出库人员</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="operatorPerson" autocomplete="off" class="layui-input ">
+                                </div>
+                            </div>-->
+                            <div class="layui-col-md4 layui-col-xs4">
+                                <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit
+                                        lay-filter="table-query">
+                                    <i class="layui-icon layui-icon-search"></i>
+                                    查询
+                                </button>
+                                <button type="reset" class="pear-btn pear-btn-md">
+                                    <i class="layui-icon layui-icon-refresh"></i>
+                                    重置
+                                </button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <table id="table-table" lay-filter="table-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/html" id="wms-toolbar">
+    </script>
+    <script type="text/html" id="tabel-createTime">
+        {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm')}}
+    </script>
+    <script type="text/html" id="table-bar">
+        {{# if(d.status==0){ }}
+        <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i class="layui-icon layui-icon-delete"></i></button>
+        <!-- <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="setting"><i class="pear-icon pear-icon-setting"></i></button> -->
+        {{# } }}
+
+        <!-- {{# if(d.source==1){ }}
+        <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="backproductno"><i class="layui-icon layui-icon-edit"></i></button>
+        {{# } }} -->
+        <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="detail"><i class="layui-icon layui-icon-file"></i></button>
+    </script>
+    <script src="/component/layui/layui.js"></script>
+    <script src="/component/pear/pear.js"></script>
+    <script>
+        layui.use(['table', 'form', 'jquery', 'dtree', 'common', 'apis'], function () {
+            let table = layui.table;
+            let form = layui.form;
+            let $ = layui.jquery;
+            let dtree = layui.dtree;
+            let common = layui.common;
+            let apis = layui.apis;
+            let laydate = layui.laydate;
+            let MODULE_PATH = "";
+            //执行一个laydate实例
+            laydate.render({
+                elem: '.time' //指定元素,
+                , format: 'yyyy-MM-dd'
+            });
+            //屏幕可工作区域高度
+            var height = window.screen.availHeight - 290;
+            var status = common.GetStatus();
+            let cols = [
+                [
+                    {
+                        title: '编码',
+                        field: 'id',
+                        align: 'center',
+                        
+                    },
+                    {
+                        title: '日志创建时间',
+                        field: 'createTime',
+                        align: 'center',
+                        
+                    },
+                   
+                    {
+                        title: '日志内容',
+                        align: 'center',
+                       
+                        field: 'content'
+                    },
+                    {
+                        title: '货柜Key',
+                        align: 'center',
+                       
+                        field: 'key'
+                    },
+                    {
+                        title: '货柜名称',
+                        align: 'center',
+                      
+                        field: 'containName'
+                        //toolbar: "#table-bar"
+                    },
+                    {
+                        title: '操作员',
+                        align: 'center',
+
+                        field: 'operation'
+                        //toolbar: "#table-bar"
+                    }
+                ]
+            ]
+
+            var DTree = dtree.render({
+                elem: "#productTree",
+                //data: data,
+                initLevel: "2", //默认展开层级为1
+                line: true, // 有线树
+                ficon: ["1", "-1"], // 设定一级图标样式。0表示方形加减图标，8表示小圆点图标
+                icon: ["0", "2"], // 设定二级图标样式。0表示文件夹图标，5表示叶子图标
+                method: 'get',
+                height: height,
+                dataStyle: 'layuiStyle',
+                // response: {
+                //     title: "productName",
+                //     parentId: "pid",
+                //     statusCode: 200
+                // },
+                response: {
+                    title: "name",
+                    parentId: "parentcode",
+                    statusCode: 200
+                },
+                url: apis.GetLog
+            });
+
+            //树节点查询
+            window.QueryTree = function (obj) {
+                DTree.fuzzySearch($(obj).val());
+            }
+            table_table = table.render({
+                id: 'table_table',
+                elem: '#table-table',
+                url: apis.GetLog,
+                page: true,
+                cols: cols,
+                skin: 'line',
+                //toolbar: false,
+                totalRow: true,
+                toolbar: '#wms-toolbar',
+                request: {
+                    pageName: 'pageIndex',//页码的参数名称，默认：page
+                    limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                },
+                response: {
+                    statusCode: "200"
+                }
+            });
+            table.on('toolbar(table-table)', function (obj) {
+                if (obj.event === 'add') {
+                    window.add();
+                } else if (obj.event === 'refresh') {
+                    window.refresh();
+                } else if (obj.event === 'batchRemove') {
+                    window.batchRemove(obj);
+                }
+            });
+            form.on('submit(table-query)', function (data) {
+                table.reload("table_table", { where: data.field, page: { curr: 1 } });
+                return false;
+            });
+            var productId;
+            // 绑定节点点击事件
+            dtree.on("node(productTree)", function (obj) {
+                if (obj.param.nodeId != null || obj.param.nodeId != undefined) {
+                    productId = obj.param.nodeId;
+                    window.GetBills();
+                }
+                if (!obj.param.leaf) {
+                    var $div = obj.dom;
+                    DTree.clickSpread($div); //调用内置函数展开节点
+                }
+            });
+            table.on('tool(table-table)', function (obj) {
+                if (obj.event === 'remove') {
+                    window.remove(obj);
+                } else if (obj.event === 'detail') {
+                    window.detail(obj);
+                } else if (obj.event === 'backproductno') {
+                    window.backproductno(obj);
+                } else if (obj.event === 'setting') {
+
+                    window.Setting(obj);
+                }
+            });
+            window.BatchCode = function (obj) {
+                var materialId = $(obj).data('id');
+                var batchCode = $(obj).val();
+                var find_data = table_data.find(x => x.materialId == materialId);
+                find_data.batchCode = batchCode;
+            }
+            window.CertificateCode = function (obj) {
+                var materialId = $(obj).data('id');
+                var certificateCode = $(obj).val();
+                var find_data = table_data.find(x => x.materialId == materialId);
+                find_data.certificateCode = certificateCode;
+            }
+            window.Manufacturers = function (obj) {
+                var materialId = $(obj).data('id');
+                var manufacturers = $(obj).val();
+                var find_data = table_data.find(x => x.materialId == materialId);
+                find_data.manufacturers = manufacturers;
+            }
+            window.GetBills = function () {
+                table.reload("table_table", {
+                    where: {
+                        productId: productId
+                    }
+                });
+            };
+            window.remove = function (obj) {
+                layer.confirm('确定要删除该出库单', {
+                    icon: 3,
+                    title: '提示'
+                }, function (index) {
+                    layer.close(index);
+                    common.post(function (res) {
+                        layer.msg("删除成功！", { icon: 1, time: 2000, end: function () { window.refresh(); } });
+                    }, apis.DeleteBills + "?billId=" + obj.data["id"]);
+                });
+            }
+
+            window.detail = function (obj) {
+                layer.open({
+                    type: 2,
+                    title: '出库明细',
+                    shade: 0.1,
+                    area: ['1200px', '600px'],
+                    content: '/view/stockout/stockoutdetail/index.html?billId=' + escape(obj.data.id),
+                    end: function () {
+                        table_table.reload();
+                    }
+                });
+            };
+
+            window.Setting = function (obj) {
+                layer.open({
+                    type: 2,
+                    title: '批次设置',
+                    shade: 0.1,
+                    area: ['1200px', '600px'],
+                    content: '/view/stockout/stockoutdetail/setbatchcode.html?billId=' + escape(obj.data.id),
+                    end: function () {
+                        table_table.reload();
+                    }
+                });
+            };
+            window.backproductno = function (obj) {
+                console.log(obj);
+                layer.open({
+                    type: 2,
+                    title: '回填产品编号',
+                    shade: 0.1,
+                    area: ['1000px', '500px'],
+                    content: 'backproductno.html?productIds=' + escape(obj.data.productId) + "&billId=" + escape(obj.data.id),
+                    end: function () {
+                        table_table.reload();
+                    }
+                });
+            };
+            window.refresh = function (param) {
+                table.reload('table_table');
+            }
+        })
+    </script>
+</body>
+
+</html>

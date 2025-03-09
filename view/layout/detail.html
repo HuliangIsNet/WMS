@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>编辑布局</title>
+    <meta id="i18n_pagename" content="layout-common" />
+
+    <link rel="stylesheet" href="/component/pear/css/pear.css" />
+    <style>
+        .layui-form-label {
+            width: 120px;
+        }
+
+        .layui-input-block {
+            margin-left: 150px;
+        }
+
+        .layui-form .layui-table-box .layui-table-body {
+            overflow-x: hidden !important;
+        }
+
+            .layui-form .layui-table-box .layui-table-body .layui-table-cell {
+                height: 40px !important;
+                line-height: 40px !important;
+                overflow: visible !important;
+            }
+    </style>
+</head>
+
+<body>
+    <form class="layui-form" lay-filter="wms-form" action="javascript:void(0);"
+          onkeydown="if(event.keyCode==13)return false;">
+        <div class="mainBox">
+            <div class="main-container">
+                <div class="layui-form-item">
+                    <div class=" layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="布局名称"></label>
+                        <div class="layui-input-block">
+                            <input type="text" data-i18n-placeholder="布局名称" readonly name="name" class="layui-input"
+                                   lay-verify="required|checkName" />
+                        </div>
+                    </div>
+                    <div class="layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="是否默认"></label>
+                        <div class="layui-input-block">
+                            <input type='checkbox' name='isDefault' disabled lay-filter='isDefault' lay-skin='switch'
+                                   lay-text='Yes|No' />
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <table id="wms-table" lay-filter="wms-table"></table>
+                </div>
+
+            </div>
+        </div>
+        <div class="bottom">
+            <div class="button-container">
+                <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit lay-filter="formSubmit">
+                    <i class="layui-icon layui-icon-ok"></i>
+                    <span data-i18n-text="提交"></span>
+                </button>
+            </div>
+        </div>
+    </form>
+    <!-- <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form" lay-filter="wms-form" action="javascript:void(0);">
+                <div class="layui-form-item">
+                    <div class=" layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label">布局名称:</label>
+                        <div class="layui-input-block">
+                            <input type="text" placeholder="布局名称" readonly name="name" class="layui-input"
+                                lay-verify="required|checkName" />
+                        </div>
+                    </div>
+                    <div class="layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label">是否默认:</label>
+                        <div class="layui-input-block">
+                            <input type='checkbox' name='isDefault' disabled lay-filter='isDefault' lay-skin='switch'
+                                lay-text='是|否' />
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <table id="wms-table" lay-filter="wms-table"></table>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script type="text/html" id="table-toolbar">
+        <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
+            <i class="layui-icon layui-icon-add-1"></i>
+            新增一行
+        </button>
+        <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="remove">
+            <i class="layui-icon layui-icon-delete"></i>
+            删除一行
+        </button>
+    </script> -->
+    <script src="/component/preview/js/jquery.js"></script>
+    <script src="/component/i18n/jquery.i18n.properties.js"></script>
+    <script src="/component/layui/layui.js"></script>
+    <script src="/component/pear/pear.js"></script>
+    <script src="/component/preview/js/jquery.js"></script>
+    <script src="/component/i18n/jquery.i18n.properties.js"></script>
+    <script>
+        layui.use(['form', 'element', 'common', 'apis', 'table', 'lang'], function () {
+            var $ = layui.$,
+                form = layui.form,
+                common = layui.common,
+                apis = layui.apis,
+                laydate = layui.laydate,
+                layer = layui.layer
+            table = layui.table;
+            let lang = layui.lang;
+            form = layui.form;
+            lang.render();
+            form.render();
+            ///明细
+            var detailData = [];
+            var index = 1;
+            let cols = [
+                [
+                    {
+                        title: $.i18n.prop('编号'),
+                        align: 'center',
+                        templet: function (d) {
+                            var html = "<input type='number' data-id='" + d.id + "' readonly class='layui-input' value='" + d.no + "' data-name='no' onblur='window.ChangeValue(this)' oninput='window.ChangeValue(this)' />";
+                            return html;
+                        }
+                    },
+                    {
+                        title: $.i18n.prop('名称'),
+                        align: 'center',
+                        templet: function (d) {
+                            var html = "<input type='number' data-id='" + d.id + "' readonly class='layui-input' value='" + d.name + "' data-name='column' onblur='window.ChangeValue(this)' oninput='window.ChangeValue(this)' />";
+                            return html;
+                        }
+                    },
+                    {
+                        title: $.i18n.prop('有无料盒'),
+                        align: 'center',
+                        templet: function (d) {
+                            var html = "<input type='text' data-id='" + d.id + "' readonly class='layui-input' value='" + d.isFull + "' data-name='isFull' onblur='window.ChangeValue(this)' oninput='window.ChangeValue(this)' />";
+                            return html;
+                        }
+                    },
+                    {
+                        title: $.i18n.prop('开始列'),
+                        align: 'center',
+                        templet: function (d) {
+                            var html = "<input type='number' data-id='" + d.id + "' readonly class='layui-input' value='" + d.column + "' data-name='column' onblur='window.ChangeValue(this)' oninput='window.ChangeValue(this)' />";
+                            return html;
+                        }
+                    },
+                    {
+                        title: $.i18n.prop('开始行'),
+                        align: 'center',
+                        templet: function (d) {
+                            var html = "<input type='number' data-id='" + d.id + "' readonly class='layui-input' value='" + d.row + "'  data-name='row' onblur='window.ChangeValue(this)' oninput='window.ChangeValue(this)' />";
+                            return html;
+                        }
+                    },
+                    {
+                        title: $.i18n.prop('跨列'),
+                        align: 'center',
+                        templet: function (d) {
+                            var html = "<input type='number' data-id='" + d.id + "' readonly class='layui-input' value='" + d.colSpan + "'  data-name='colspan' onblur='window.ChangeValue(this)' oninput='window.ChangeValue(this)' />";
+                            return html;
+                        }
+                    },
+                    {
+                        title: $.i18n.prop('跨行'),
+                        align: 'center',
+                        templet: function (d) {
+                            var html = "<input type='number' data-id='" + d.id + "' readonly class='layui-input' value='" + d.rowSpan + "'  data-name='rowspan' onblur='window.ChangeValue(this)' oninput='window.ChangeValue(this)' />";
+                            return html;
+                        }
+                    }
+                    ,
+                    {
+                        title: $.i18n.prop('运行高度(Y)'),
+                        align: 'center',
+                        templet: function (d) {
+                            var html = "<input type='number' data-id='" + d.id + "' readonly class='layui-input' value='" + d.runOffSet_Y + "'  data-name='runoffset_y' onblur='window.ChangeValue(this)' oninput='window.ChangeValue(this)' />";
+                            return html;
+                        }
+                    },
+                    {
+                        title: $.i18n.prop('运行距离(X)'),
+                        align: 'center',
+                        templet: function (d) {
+                            var html = "<input type='number' data-id='" + d.id + "' readonly class='layui-input' value='" + d.runOffSet_X + "'  data-name='runoffset_x' onblur='window.ChangeValue(this)' oninput='window.ChangeValue(this)' />";
+                            return html;
+                        }
+                    },
+                    {
+                        title: $.i18n.prop('AGV地址'),
+                        align: 'center',
+                        templet: function (d) {
+                            var html = "<input type='number' data-id='" + d.id + "' readonly class='layui-input' value='" + d.agvLocation + "'  data-name='rowspan' onblur='window.ChangeValue(this)' oninput='window.ChangeValue(this)' />";
+                            return html;
+                        }
+                    }
+                ]
+            ]
+
+            var layoutId = common.GetQueryString('wmsId');
+            var layoutData;
+            common.get(function (res) {
+                layoutData = res.item1;
+                index = res.item2.length == 0 ? 1 : res.item2.length + 1;
+                form.val('wms-form', res.item1);
+                detailData = res.item2;
+            }, apis.GetLayoutModel, { layoutId: layoutId });
+
+            table.render({
+                elem: '#wms-table',
+                data: detailData,
+                cols: cols,
+                skin: 'line',
+                limit: 999
+            });
+            form.render();
+        })
+    </script>
+</body>
+
+</html>

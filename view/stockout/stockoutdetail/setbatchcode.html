@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>单据明细</title>
+    <link rel="stylesheet" href="/component/pear/css/pear.css" />
+    <style>
+        .layui-form td .layui-table-cell {
+            height: 40px !important;
+            line-height: 40px !important;
+            overflow: visible !important;
+        }
+
+        .layui-table-body {
+            overflow: visible !important;
+        }
+
+        .layui-table-box,
+        layui-table-view {
+            overflow: visible !important;
+        }
+    </style>
+</head>
+
+<body class="pear-container">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">物料名称</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="name" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">图代号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="code" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="table-query">
+                            <i class="layui-icon layui-icon-search"></i>
+                            查询
+                        </button>
+                        <button type="reset" class="pear-btn pear-btn-md">
+                            <i class="layui-icon layui-icon-refresh"></i>
+                            重置
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="table-table" lay-filter="table-table"></table>
+        </div>
+    </div>
+
+
+
+    <script type="text/html" id="table-bar">
+			<button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit"><i class="layui-icon layui-icon-edit"></i></button>
+		    <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i class="layui-icon layui-icon-delete"></i></button>
+		</script>
+    <script type="text/html" id="table-toolbar">
+            <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
+                确认完成批次分配
+            </button>
+        </script>
+    <script src="/component/layui/layui.js"></script>
+    <script src="/component/pear/pear.js"></script>
+    <script>
+        layui.use(['table', 'form', 'jquery', 'common', 'apis'], function () {
+            let table = layui.table;
+            let form = layui.form;
+            let $ = layui.jquery;
+            let common = layui.common;
+            let apis = layui.apis;
+            let upload = layui.upload;
+            let layer = layui.layer;
+            let MODULE_PATH = "";
+            var status = common.GetStatus();
+            let cols = [
+                [
+                    {
+                        title: '物料名称',
+                        field: 'materialName',
+                        align: 'center'
+                    },
+                    {
+                        title: '图代号',
+                        field: 'code',
+                        align: 'center'
+                    },
+                    {
+                        title: '规格型号',
+                        field: 'spec',
+                        align: 'center'
+                    },
+                    {
+                        title: '质量等级',
+                        field: 'grade',
+                        align: 'center'
+                    },
+                    {
+                        title: '出库数量',
+                        field: 'count',
+                        align: 'center'
+                    },
+                    {
+                        title: '出库批次',
+                        align: 'center',
+                        templet: function (d) {
+                            var html = '';
+                            html = "<select name='batchCode' lay-filter='batchCode'  id='batchCode_" + d.id + "'>";
+                            var batchCodes = [];
+                            //获取到批次
+                            common.get({ materialId: d.materialId }, apis.GetMaterialBatchCode, function (res) {
+                                layui.each(res, function (i, item) {
+                                    html += "<option value='" + item.item1 + "' >" + item.item1 + "(" + item.item2 + ")" + "</option>";
+                                });
+                            });
+
+                            html += "</select>";
+                            return html;
+                        }
+
+                    }
+                ]
+            ]
+            var billId = common.GetQueryString("billId");
+            var where = { billId: billId }
+            var table_table = table.render({
+                elem: '#table-table',
+                url: apis.GetBillDetailToBatchCode,
+                where: where,
+                page: true,
+                cols: cols,
+                skin: 'line',
+                toolbar: '#table-toolbar',
+                defaultToolbar: [],
+                request: {
+                    pageName: 'pageIndex',//页码的参数名称，默认：page
+                    limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                },
+                response: {
+                    statusCode: "200"
+                }
+            });
+
+            table.on('toolbar(table-table)', function (obj) {
+                if (obj.event === 'add') {
+                    window.add(obj);
+                }
+            });
+            window.add = function (obj) {
+                var data = layui.table.cache["table-table"];
+                layui.each(data, function (i, item) {
+                    //绑定当前批次的数据
+                    item.batchCode = $("#batchCode_" + item.id).val();
+                });
+                console.log(data);
+                let loading = layer.load();
+                common.post(data, apis.OutSplitByBatchCode, null, function (res) {
+                    layer.close(loading);
+                    layer.msg("更新成功", {
+                        icon: 1, time: 2000, end: function () {
+                            parent.layer.closeAll();
+                        }
+                    });
+                });
+            }
+            form.on('submit(table-query)', function (data) {
+                where = $.extend(where, data.field);
+                table_table.reload({
+                    where: where
+                });
+                return false;
+            });
+
+
+
+            window.refresh = function (param) {
+                table_table.reload();
+            };
+        })
+    </script>
+</body>
+
+</html>

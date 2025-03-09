@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta id="i18n_pagename" content="hopper-common" />
+    <title>修改货柜</title>
+    <link rel="stylesheet" href="/component/pear/css/pear.css" />
+    <style>
+        .layui-form-label {
+            width: 120px;
+        }
+
+        .layui-input-block {
+            margin-left: 150px;
+        }
+    </style>
+</head>
+
+<body class="pear-container">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form" lay-filter="wms-form" action="javascript:void(0);">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" data-i18n-text="料斗名称"></label>
+                    <div class="layui-input-block">
+                        <input type="text" data-i18n-placeholder="料斗名称" name="name" class="layui-input"
+                               lay-verify="required|checkName" />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" data-i18n-text="列数"></label>
+                    <div class="layui-input-block">
+                        <input type="number" data-i18n-placeholder="列数" name="columns" class="layui-input"
+                               lay-verify="required|number" />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" data-i18n-text="行数"></label>
+                    <div class="layui-input-block">
+                        <input type="number" data-i18n-placeholder="行数" name="rows" class="layui-input"
+                               lay-verify="required|number" />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" data-i18n-text="运行高度"></label>
+                    <div class="layui-input-block">
+                        <input type="number" data-i18n-placeholder="运行高度" name="runHeight" class="layui-input"
+                               lay-verify="required|number" />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" data-i18n-text="状态"></label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="state" lay-filter="state" lay-skin="switch" data-i18n-lay-text="启用|停用" />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" data-i18n-text="料斗布局"></label>
+                    <div class="layui-input-block">
+                        <select id="sel_LayoutId" name="layoutId" lay-filter="layoutId">
+                            <option value="0" data-i18n-text="--请选择料斗布局--"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="pear-btn pear-btn-success" lay-submit lay-filter="formSubmit">
+                            &emsp;  <span data-i18n-text="确认保存"></span>&emsp;
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="/component/preview/js/jquery.js"></script>
+    <script src="/component/i18n/jquery.i18n.properties.js"></script>
+    <script src="/component/layui/layui.js"></script>
+    <script src="/component/pear/pear.js"></script>
+    <script>
+        layui.use(['form', 'common', 'apis', 'lang'], function () {
+            var $ = layui.$,
+                form = layui.form,
+                common = layui.common,
+                apis = layui.apis,
+                layer = layui.layer;
+            let lang = layui.lang;
+            lang.render();
+            form.render();
+            var containerId = common.GetQueryString("containerId");
+
+            common.get(function (res) {
+                layui.each(res, function (i, item) {
+                    $("#sel_LayoutId").append(new Option(item.name, item.id));
+                });
+            }, apis.GetLayoutList);
+            form.render();
+
+            //表单验证
+            form.verify({
+                checkName: function (value, item) {
+                    var count = false;
+                    common.get(function (res) {
+                        count = res;
+                    }, apis.CheckHopperName, { containerId: containerId, name: value });
+                    if (count > 0)
+                        return $.i18n.prop("名称已经存在");
+                }
+            });
+            //表单提交
+            form.on("submit(formSubmit)", function (data) {
+                var formHopper = form.val("wms-form");
+                formHopper.containerId = containerId;
+                var data_state = common.GetState();
+                formHopper.state = formHopper.state === 'on' ? 0 : 1;
+                common.post(function (res) {
+                    layer.msg($.i18n.prop('保存成功'), {
+                        icon: 1, time: 2000, end: function () {
+                            parent.layer.closeAll();
+                        }
+                    });
+                }, apis.AddHopper, formHopper);
+            });
+        })
+    </script>
+</body>
+
+</html>

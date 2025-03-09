@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta id="i18n_pagename" content="container-common" />
+    <title>添加货柜</title>
+    <link rel="stylesheet" href="/component/pear/css/pear.css" />
+    <meta id="i18n_pagename" content="container-common" />
+</head>
+
+<body>
+    <form class="layui-form" lay-filter="wms-form" action="javascript:void(0);"
+          onkeydown="if(event.keyCode==13)return false;">
+        <div class="mainBox">
+            <div class="main-container">
+                <div class="layui-form-item">
+                    <div class=" layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="识别号"></label>
+                        <div class="layui-input-block">
+                            <input type="text" data-i18n-placeholder="识别号" name="key" class="layui-input" readonly />
+                        </div>
+                    </div>
+                    <div class="layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="名称"></label>
+                        <div class="layui-input-block">
+                            <input type="text" data-i18n-placeholder="名称" name="name" class="layui-input"
+                                   lay-verify="required|checkContainerName" />
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="货柜类型"></label>
+                        <div class="layui-input-block">
+                            <select id="containerType" name="containerType" class="layui-select">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="运行模式"></label>
+                        <div class="layui-input-block">
+                            <select id="runMode" name="runMode" class="layui-select">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="货柜状态"></label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" name="state" lay-filter="state" lay-skin="switch" date-i18n-lay-text="启用|禁用"
+                                   checked />
+                        </div>
+                    </div>
+                    <div class=" layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="料斗个数"></label>
+                        <div class="layui-input-block">
+                            <input type="number" data-i18n-placeholder="料斗个数" name="hopperCount" class="layui-input"
+                                   lay-verify="required" />
+
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class=" layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="料斗列数"></label>
+                        <div class="layui-input-block">
+                            <input type="number" data-i18n-placeholder="料斗列数" name="columns" class="layui-input"
+                                   lay-verify="required" />
+
+                        </div>
+                    </div>
+                    <div class="layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="料斗行数"></label>
+                        <div class="layui-input-block">
+                            <input type="number" data-i18n-placeholder="料斗行数" name="rows" class="layui-input"
+                                   lay-verify="required" />
+                        </div>
+                    </div>
+                </div>
+
+
+              
+                <div class="layui-form-item">
+                    <div class=" layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="是否自动门"></label>
+                        <div class="layui-input-block" style="margin-left: 150px;">
+                            <input type="checkbox" name="isAutoDoor" lay-filter="isAutoDoor"
+                                   lay-skin="switch" data-i18n-lay-text="是|否" />
+                        </div>
+                    </div>
+                    <div class=" layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="后台运行"></label>
+                        <div class="layui-input-block" style="margin-left: 150px;">
+                            <input type="checkbox" name="isBackGroundMode" lay-filter="isBackGroundMode"
+                                   lay-skin="switch" data-i18n-lay-text="是|否" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bottom">
+            <div class="button-container">
+                <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit lay-filter="formSubmit">
+                    <i class="layui-icon layui-icon-ok"></i>
+                    <span data-i18n-text="提交"></span>
+                </button>
+            </div>
+        </div>
+    </form>
+    <script src="/component/preview/js/jquery.js"></script>
+    <script src="/component/i18n/jquery.i18n.properties.js"></script>
+    <script src="/component/layui/layui.js"></script>
+    <script src="/component/pear/pear.js"></script>
+    <script src="/component/preview/js/jquery.js"></script>
+    <script src="/component/i18n/jquery.i18n.properties.js"></script>
+    <script>
+        layui.use(['form', 'common', 'apis', 'lang'], function () {
+            var $ = layui.$,
+                form = layui.form,
+                common = layui.common,
+                apis = layui.apis,
+                laydate = layui.laydate,
+                lang = layui.lang,
+                layer = layui.layer;
+            lang.render();
+            form.render();
+            form.val("wms-form", {
+                key: common.GetGuid()
+            });
+            lang.render();
+            form.render();
+
+            //货柜类型
+            common.get(function (res) {
+                layui.each(res, function (i, item) {
+                    $("#containerType").append(new Option($.i18n.prop(item), i));
+                });
+            }, apis.GetContainerType);
+
+            //货柜运行模式
+            common.get(function (res) {
+                layui.each(res, function (i, item) {
+                    $("#runMode").append(new Option($.i18n.prop(item), i));
+                });
+            }, apis.GetContainerRunMode);
+            form.render("select");
+
+
+            //表单验证
+            form.verify({
+                checkContainerName: function (value, item) {
+                    var count = false;
+                    common.get(function (res) {
+                        count = res;
+                    }, apis.CheckContainerName, { name: value });
+                    if (count)
+                        return $.i18n.prop("货柜名称已经存在");
+                }
+            });
+            //表单提交
+            form.on("submit(formSubmit)", function (data) {
+                var container = form.val("wms-form");
+                var data_state = common.GetState();
+                container.maxHeight = common.isNull(container.maxHeight) ? 0 : container.maxHeight;
+                container.minHeight = common.isNull(container.minHeight) ? 0 : container.minHeight;
+                container.state = container.state === 'on' ? data_state[$.i18n.prop('启用')] : data_state[$.i18n.prop('禁用')];
+                container.isBackGroundMode = container.isBackGroundMode === 'on' ? true : false;
+                container.isMultiWorkBench = container.isMultiWorkBench === 'on' ? true : false;
+                container.isHasWeight = container.isHasWeight === 'on' ? true : false;
+                container.isAutoDoor = container.isAutoDoor === 'on' ? true : false;
+                console.log(container);
+                var data = { container: container, columns: container.columns, rows: container.rows };
+                common.post(function (res) {
+                    layer.msg($.i18n.prop('保存成功'), {
+                        icon: 1, time: 2000, end: function () {
+                            parent.layer.closeAll();
+                        }
+                    });
+                }, apis.AddContainer + "?columns=" + container.columns + "&rows=" + container.rows, container);
+            });
+        })
+    </script>
+</body>
+
+</html>

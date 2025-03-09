@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>入库单复制</title>
+    <link rel="stylesheet" href="/component/pear/css/pear.css" />
+
+</head>
+
+<body class="pear-container">
+    <div class="layui-card">
+        <div class="layui-card-body" style="overflow-x: hidden;">
+            <form class="layui-form" lay-filter="tray-form" action="javascript:void(0);">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">入库工位:</label>
+                    <div class="layui-input-block">
+                        <input type='text' readonly='readonly' id="inset" name='inset' autocomplete='off'
+                            class='layui-input '></input>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="pear-btn pear-btn-success" lay-submit lay-filter="formSubmit">
+                            &emsp;确认下单&emsp;
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script type="text/html" id="test-dropdown-toolbar-barDemo">
+        <a class="layui-btn layui-btn-xs" lay-event="more">{{d.inventoryCount}} <i class="layui-icon layui-icon-down"></i></a>
+      </script>
+    <script src="/component/layui/layui.js"></script>
+    <script src="/component/pear/pear.js"></script>
+    <script>
+        layui.use(['form', 'element', 'common', 'apis', 'tableSelect'], function () {
+            var $ = layui.$,
+                form = layui.form,
+                common = layui.common,
+                apis = layui.apis,
+                laydate = layui.laydate,
+                layer = layui.layer,
+                tableSelect = layui.tableSelect;
+            var billData = [];
+            var billId = common.GetQueryString('billId');
+            common.get({ billId: billId }, apis.GetBillsById, function (res) {
+                billData = res;
+            });
+            console.log(billData);
+            tableSelect.render({
+                width: 300,
+                height: 300,
+                elem: '#inset',
+                checkedKey: 'trayId', //表格的唯一建值，非常重要，影响到选中状态 必填
+                searchType: 'more', //开启多条件搜索
+                searchList: [
+                    { searchKey: 'containerName', searchPlaceholder: '货柜名称' }, //搜索条件1
+                    { searchKey: 'trayName', searchPlaceholder: '料盒名称' },  //搜索条件2
+                ],
+                toolBack: function (obj) {
+                },
+                table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
+                    url: apis.GetHopperTrayPageList,
+                    page: true,
+                    cols: [[
+                        { type: 'radio' },
+                        { field: 'containerName', title: '货柜', width: 100 },
+                        { field: 'hopperName', title: '料斗', width: 100 },
+                        { field: 'trayName', title: '料盒名称', width: 100 },
+                        {
+                            title: '数量', width: 100, toolbar: '#test-dropdown-toolbar-barDemo'
+                        },
+                    ]],
+                    request: {
+                        pageName: 'pageIndex',//页码的参数名称，默认：page
+                        limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                    },
+                    response: {
+                        statusCode: "200"
+                    }
+                },
+                done: function (elem, data) {
+
+
+
+                    if (data.data.length > 0) {
+                        //
+
+                        var gwdata = data.data[0];
+                        $("#inset").val(gwdata.containerName + "_" + gwdata.hopperName + "_" + gwdata.trayName);
+                        billData.item1.userId = common.GetUser().id;
+                        billData.item1.userName = common.GetUser().realName;
+
+                        billData.item2.forEach(element => {
+                            element.containerId = gwdata.containerId;
+                            element.hopperId = gwdata.hopperId;
+                            element.trayId = gwdata.trayId;
+                        });
+                    }
+                }
+            });
+            function checkData(data) {
+                var isReturn = true;
+                data.forEach(element => {
+                    if (element.containerId === 0) {
+                        layer.alert("请选择入库物料第" + i + "行的料斗信息！", { icon: 2 });
+                        isReturn = false;
+                        return;
+                    }
+                });
+                return isReturn;
+            };
+            //表单提交
+            form.on("submit(formSubmit)", function (data) {
+                if (checkData(billData.item2)) {
+                    var loading = layer.load();
+                    common.post({ bill: billData.item1, billDetails: billData.item2 }, apis.AddBillAndSplit_In, null, function (res) {
+                        layer.msg('下单成功', {
+                            icon: 1, time: 2000, end: function () {
+                                parent.layer.closeAll();
+                            }
+                        });
+                    });
+                }
+            });
+        })
+    </script>
+</body>
+
+</html>

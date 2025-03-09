@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>添加料盒</title>
+    <link rel="stylesheet" href="/component/pear/css/pear.css" />
+
+</head>
+
+<body class="pear-container">
+    <div class="layui-card">
+        <div class="layui-card-body" style="overflow-x: hidden;">
+            <form class="layui-form" lay-filter="wms-form" action="javascript:void(0);">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">料盒名称:</label>
+                    <div class="layui-input-block">
+                        <input type="text" placeholder="料盒名称" name="name" class="layui-input"
+                            lay-verify="required" />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">料盒类型:</label>
+                    <div class="layui-input-block">
+                        <select name="trayTypeId" id="trayTypeId" lay-search></select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="pear-btn pear-btn-success" lay-submit lay-filter="formSubmit">
+                            &emsp;确认保存&emsp;
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="/component/layui/layui.js"></script>
+    <script src="/component/pear/pear.js"></script>
+    <script>
+        layui.use(['form', 'element', 'common', 'apis'], function () {
+            var $ = layui.$,
+                form = layui.form,
+                common = layui.common,
+                apis = layui.apis;
+
+
+            //料盒类型
+            common.get(function (res) {
+                layui.each(res, function (i, item) {
+                    $("#trayTypeId").append(new Option(item.name, item.id));
+                });
+            }, apis.GetTrayTypeList);
+
+            var trayId = common.GetQueryString("trayId");
+            var model;
+            common.get(function (res) {
+                model = res;
+                form.val("wms-form", model);
+            }, apis.GetTrayModel, { id: trayId });
+            form.render('select');
+            //表单验证
+            form.verify({
+                checkTrayName: function (value, item) {
+                    var count = 0;
+                    common.get( function (res) {
+                        count = res;
+                    }, apis.CheckTrayName,{ name: value, id: trayId });
+                    if (count > 0)
+                        return "名称已经存在";
+                }
+            });
+            //表单提交
+            form.on("submit(formSubmit)", function (data) {
+                var form_data = form.val("wms-form");
+                model = $.extend(model, form_data);
+                common.post( function (res) {
+                    layer.msg('保存成功', {
+                        icon: 1, time: 2000, end: function () {
+                            parent.layer.closeAll();
+                        }
+                    });
+                }, apis.UpdateTray, model);
+            });
+        })
+    </script>
+</body>
+
+</html>

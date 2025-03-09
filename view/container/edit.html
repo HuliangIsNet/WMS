@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta id="i18n_pagename" content="container-common" />
+    <title>添加货柜</title>
+    <link rel="stylesheet" href="/component/pear/css/pear.css" />
+    <meta id="i18n_pagename" content="container-common" />
+</head>
+
+<body>
+
+    <form class="layui-form" lay-filter="wms-form" action="javascript:void(0);"
+          onkeydown="if(event.keyCode==13)return false;">
+        <div class="mainBox">
+            <div class="main-container">
+                <div class="layui-form-item">
+                    <div class=" layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="识别号"></label>
+                        <div class="layui-input-block">
+                            <input type="text" data-i18n-placeholder="识别号" name="key" class="layui-input" readonly />
+                        </div>
+                    </div>
+                    <div class="layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="名称"></label>
+                        <div class="layui-input-block">
+                            <input type="text" data-i18n-placeholder="名称" name="name" class="layui-input"
+                                   lay-verify="required|checkContainerName" />
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="货柜类型"></label>
+                        <div class="layui-input-block">
+                            <select id="containerType" name="containerType" class="layui-select">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="运行模式"></label>
+                        <div class="layui-input-block">
+                            <select id="runMode" name="runMode" class="layui-select">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="货柜状态"></label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" name="state" lay-filter="state" lay-skin="switch" data-i18n-lay-text="启用|禁用"
+                                   checked />
+                        </div>
+                    </div>
+                    <div class=" layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="料斗个数"></label>
+                        <div class="layui-input-block">
+                            <input type="number" data-i18n-placeholder="料斗个数" name="hopperCount" class="layui-input"
+                                   lay-verify="required" readonly />
+
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class=" layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="料斗列数"></label>
+                        <div class="layui-input-block">
+                            <input type="number" data-i18n-placeholder="料斗列数" name="columns" class="layui-input"
+                                   lay-verify="required" />
+
+                        </div>
+                    </div>
+                    <div class="layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="料斗行数"></label>
+                        <div class="layui-input-block">
+                            <input type="number" data-i18n-placeholder="料斗行数" name="rows" class="layui-input"
+                                   lay-verify="required" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class=" layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="是否自动门"></label>
+                        <div class="layui-input-block" style="margin-left: 150px;">
+                            <input type="checkbox" name="isAutoDoor" lay-filter="isAutoDoor"
+                                   lay-skin="switch" data-i18n-lay-text="是|否" />
+                        </div>
+                    </div>
+                    <div class=" layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="后台运行"></label>
+                        <div class="layui-input-block" style="margin-left: 150px;">
+                            <input type="checkbox" name="isBackGroundMode" lay-filter="isBackGroundMode"
+                                   lay-skin="switch" data-i18n-lay-text="是|否" />
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" data-i18n-text="料斗布局"></label>
+                        <div class="layui-input-block">
+                            <select id="sel_LayoutId" name="layoutId" lay-filter="layoutId">
+                                <option value="0" data-i18n-text="--请选择料斗布局--"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class=" layui-col-md6 layui-col-xs6">
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="bottom">
+            <div class="button-container">
+                <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit lay-filter="formSubmit">
+                    <i class="layui-icon layui-icon-ok"></i>
+                    <span data-i18n-text="提交"></span>
+                </button>
+            </div>
+        </div>
+    </form>
+    <script src="/component/preview/js/jquery.js"></script>
+    <script src="/component/i18n/jquery.i18n.properties.js"></script>
+    <script src="/component/layui/layui.js"></script>
+    <script src="/component/pear/pear.js"></script>
+    <script src="/component/preview/js/jquery.js"></script>
+    <script src="/component/i18n/jquery.i18n.properties.js"></script>
+    <script>
+        layui.use(['form', 'common', 'apis', 'lang'], function () {
+            var $ = layui.$,
+                form = layui.form,
+                common = layui.common,
+                apis = layui.apis,
+                laydate = layui.laydate,
+                lang = layui.lang,
+                layer = layui.layer;
+            lang.render();
+            form.render();
+            common.get(function (res) {
+                layui.each(res, function (i, item) {
+                    $("#sel_LayoutId").append(new Option(item.name, item.id));
+                });
+            }, apis.GetLayoutList);
+
+
+
+            lang.render();
+            form.render();
+            //货柜类型
+            common.get(function (res) {
+                layui.each(res, function (i, item) {
+                    $("#containerType").append(new Option($.i18n.prop(item), i));
+                });
+            }, apis.GetContainerType);
+
+            //货柜运行模式
+            common.get(function (res) {
+                layui.each(res, function (i, item) {
+                    $("#runMode").append(new Option($.i18n.prop(item), i));
+                });
+            }, apis.GetContainerRunMode);
+            form.render("select");
+
+
+
+            // 获取到货柜
+            var container = null;
+            var containerId = common.GetQueryString("containerId");
+            common.get(function (res) {
+                container = res;
+                form.val("wms-form", container);
+                form.val("wms-form", {
+                    state: container.state == 0 ? true : false,
+
+                });
+
+            }, apis.GetContainer, { containerId: containerId });
+
+
+            form.render("select");
+
+
+            //表单验证
+            form.verify({
+                checkContainerName: function (value, item) {
+                    var count = false;
+                    common.get(function (res) {
+                        count = res;
+                    }, apis.CheckContainerName, { name: value, contaierId: containerId });
+                    if (count)
+                        return $.i18n.prop("货柜名称已经存在");
+                }
+            });
+            //表单提交
+            form.on("submit(formSubmit)", function (data) {
+                var container_from = form.val("wms-form");
+                container_from.state = container_from.state === 'on' ? 0 : 1;
+                container_from.maxHeight = common.isNull(container_from.maxHeight) ? 0 : container_from.maxHeight;
+                container_from.minHeight = common.isNull(container_from.minHeight) ? 0 : container_from.minHeight;
+                container_from.isBackGroundMode = container_from.isBackGroundMode === 'on' ? true : false;
+                container_from.isMultiWorkBench = container_from.isMultiWorkBench === 'on' ? true : false;
+                container_from.isHasWeight = container_from.isHasWeight === 'on' ? true : false;
+                container_from.isAutoDoor = container_from.isAutoDoor === 'on' ? true : false;
+                container = $.extend(container, container_from);
+                var layoutId = $("#sel_LayoutId").val();
+                common.post(function (res) {
+                    layer.msg($.i18n.prop('提交成功'), {
+                        icon: 1, time: 2000, end: function () {
+                            parent.layer.closeAll();
+                        }
+                    });
+                }, apis.UpdateContainer + '?layoutId=' + layoutId, container);
+            });
+        })
+    </script>
+</body>
+
+</html>

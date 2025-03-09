@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta id="i18n_pagename" content="layout-common" />
+	<title>物料管理</title>
+	<meta id="i18n_pagename" content="layout-common" />
+	<link rel="stylesheet" href="/component/pear/css/pear.css" />
+</head>
+
+<body class="pear-container">
+	<div class="layui-card">
+		<div class="layui-card-body">
+			<form class="layui-form" action="">
+				<div class="layui-form-item">
+					<div class="layui-form-item layui-inline">
+						<!--<label class="layui-form-label">布局名称</label>-->
+						<label class="layui-form-label" data-i18n-text="布局名称"></label>
+						<div class="layui-input-inline">
+							<input type="text" name="name" placeholder="" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-form-item layui-inline">
+						<button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="table-query">
+							<i class="layui-icon layui-icon-search"></i>
+							<span data-i18n-text="查询"></span>
+						</button>
+						<button type="reset" class="pear-btn pear-btn-md">
+							<i class="layui-icon layui-icon-refresh"></i>
+							<span data-i18n-text="重置"></span>
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="layui-card">
+		<div class="layui-card-body">
+			<table id="wms-table" lay-filter="wms-table"></table>
+		</div>
+	</div>
+
+	<script type="text/html" id="wms-toolbar">
+		<button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
+			<i class="layui-icon layui-icon-add-1"></i>
+			<span data-i18n-text="新增"></span>
+			
+		</button>
+		<button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove">
+			<i class="layui-icon layui-icon-delete"></i>
+			<span data-i18n-text="删除"></span>
+
+		</button>
+	</script>
+
+	<script type="text/html" id="wms-bar">
+		<button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="detail"><i class="layui-icon layui-icon-form"></i></button>
+		<button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit"><i class="layui-icon layui-icon-edit"></i></button>
+		<button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i class="layui-icon layui-icon-delete"></i></button>
+	</script>
+
+	<script src="/component/preview/js/jquery.js"></script>
+	<script src="/component/i18n/jquery.i18n.properties.js"></script>
+	<script src="/component/layui/layui.js"></script>
+	<script src="/component/pear/pear.js"></script>
+
+
+	<script>
+        layui.use(['table', 'form', 'jquery', 'common', 'apis', 'upload', 'lang'], function () {
+			let table = layui.table;
+			let form = layui.form;
+            let $ = layui.jquery;
+			let common = layui.common;
+			let apis = layui.apis;
+			let upload = layui.upload;
+			let lang = layui.lang;
+			let layer = layui.layer;
+			let MODULE_PATH = "";
+			lang.render();
+			form.render();
+			let cols = [
+				[{
+					type: 'checkbox'
+				},
+				{
+                    title: $.i18n.prop("布局名称"),
+					field: 'name',
+					align: 'center'
+				},
+
+				{
+                    title: $.i18n.prop('是否默认'),
+					align: 'center',
+					templet: function (d) {
+						var html = "<input type='checkbox' name='isDefault' value='" + d.id + "' lay-filter='isDefault' lay-skin='switch' lay-text='"+$.i18n.prop('是|否')+"'" + (d.isDefault ? 'checked' : '') + " />";
+						return html;
+					}
+				},
+				{
+                    title: $.i18n.prop('添加时间'),
+					align: 'center',
+					templet: function (d) {
+						return layui.util.toDateString(d.createTime, 'yyyy-MM-dd');
+					}
+				},
+
+				{
+                    title: $.i18n.prop('操作'),
+					toolbar: '#wms-bar',
+					align: 'center',
+					width: 160
+				}
+				]
+			]
+
+			var wms_table = table.render({
+				elem: '#wms-table',
+				url: apis.GetLayoutPageList,
+                page: { layout: ['prev', 'page', 'next', 'count'], countText: [$.i18n.prop('共') + ' ', ' ' + $.i18n.prop('条')] },
+                text: { none: $.i18n.prop('无数据') },
+				/*page: true,*/
+				cols: cols,
+				skin: 'line',
+				toolbar: '#wms-toolbar',
+				defaultToolbar: [],
+				request: {
+					pageName: 'pageIndex',//页码的参数名称，默认：page
+					limitName: 'pageSize' //每页数据量的参数名，默认：limit
+				},
+				response: {
+					statusCode: "200"
+				},
+				done: function (d) {
+					lang.render();
+				}
+			});
+
+			table.on('tool(wms-table)', function (obj) {
+				if (obj.event === 'remove') {
+					window.remove(obj);
+				}
+				else if (obj.event === 'detail') {
+					window.detail(obj);
+				}
+				else if (obj.event === 'edit') {
+					window.edit(obj);
+				}
+			});
+
+			table.on('toolbar(wms-table)', function (obj) {
+				if (obj.event === 'add') {
+					window.add();
+				} else if (obj.event === 'refresh') {
+					window.refresh();
+				} else if (obj.event === 'batchRemove') {
+					window.batchRemove(obj);
+				}
+			});
+
+			form.on('submit(wms-query)', function (data) {
+				wms_table.reload({
+					where: data.field
+				});
+				return false;
+			});
+
+			form.on('switch(isDefault)', function (obj) {
+				if (obj.elem.checked) {
+					var data = { layoutId: this.value, isDefault: obj.elem.checked ? true : false };
+					common.get(function (res) {
+						layer.msg($.i4.prop("重置默认布局成功"), {
+							icon: 1, time: 2000, end: function () {
+								window.refresh();
+							}
+						});
+					}, apis.UpdateLayoutDefault, data);
+				}
+				else
+					window.refresh();
+			});
+
+			window.add = function () {
+				layer.open({
+					type: 2,
+					title: $.i18n.prop('新增'),
+					shade: 0.1,
+					area: [common.isModile() ? '100%' : '1200px', common.isModile() ? '100%' : '600px'],
+					content: MODULE_PATH + 'add.html',
+					end: function () {
+						window.refresh();
+					}
+				});
+			}
+			window.detail = function (obj) {
+				layer.open({
+					type: 2,
+                    title: $.i18n.prop('查看'),
+					shade: 0.1,
+					area: [common.isModile() ? '100%' : '1200px', common.isModile() ? '100%' : '600px'],
+					content: MODULE_PATH + 'detail.html?wmsId=' + obj.data["id"],
+					end: function () {
+						window.refresh();
+					}
+				});
+			}
+			window.edit = function (obj) {
+				layer.open({
+					type: 2,
+                    title: $.i18n.prop('修改'),
+					shade: 0.1,
+					area: [common.isModile() ? '100%' : '1200px', common.isModile() ? '100%' : '600px'],
+					content: MODULE_PATH + 'edit.html?wmsId=' + obj.data["id"],
+					end: function () {
+						window.refresh();
+					}
+				});
+			}
+
+			window.remove = function (obj) {
+				if (obj.data["isDefault"]) {
+                    layer.alert($.i18n.prop('不能删除默认布局'), { icon: 2, time: 2000 });
+					return;
+				}
+                layer.confirm($.i18n.prop('确定要删除该布局'), {
+					icon: 3,
+                    title: $.i18n.prop('提示')
+				}, function (index) {
+					layer.close(index);
+					common.post(function (res) {
+                        layer.msg($.i18n.prop("删除成功"), { icon: 1, time: 2000, end: function () { window.refresh(); } });
+					}, apis.DeleteLayouts, { ids: obj.data["id"] });
+				});
+			};
+
+			window.batchRemove = function (obj) {
+				var checkIds = common.checkField(obj, 'id');
+				if (checkIds === "") {
+                    layer.msg($.i18n.prop("未选中数据"), {
+						icon: 3,
+						time: 1000
+					});
+					return false;
+				}
+
+                layer.confirm($.i18n.prop('确定要删除这些布局'), {
+					icon: 3,
+                    title: $.i18n.prop('提示')
+				}, function (index) {
+					layer.close(index);
+					common.post(function (res) {
+                        layer.msg($.i18n.prop("删除成功"), { icon: 1, time: 2000, end: function () { window.refresh(); } });
+					}, apis.DeleteLayouts, { ids: checkIds.toString() });
+				});
+			};
+
+			window.refresh = function (param) {
+				wms_table.reload({ page: { curr: 1 } });
+			};
+		})
+	</script>
+</body>
+
+</html>

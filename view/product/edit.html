@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta id="i18n_pagename" content="basic-common" />
+    <title>添加产品</title>
+    <link rel="stylesheet" href="/component/pear/css/pear.css" />
+    <style>
+        .layui-form .layui-table-box .layui-table-body {
+            overflow-x: hidden !important;
+        }
+
+        .layui-form .layui-table-box .layui-table-body .layui-table-cell {
+            height: 50px !important;
+            line-height: 50px !important;
+            overflow: visible !important;
+        }
+    </style>
+</head>
+
+<body>
+    <form class="layui-form" lay-filter="product-form" action="javascript:void(0);"
+        onkeydown="if(event.keyCode==13)return false;">
+        <div class="mainBox">
+            <div class="main-container">
+                <div class="layui-carousel" id="stepForm" lay-filter="stepForm">
+                    <div carousel-item>
+                        <div>
+                            <div class="layui-form-item layui-row">
+                                <div class="layui-col-md6 layui-col-xs6 ">
+                                    <label class="layui-form-label" style="width:auto" data-i18n-text="产品名称"></label>
+                                    <div class="layui-input-block" style="margin-left:150px;">
+                                        <input type="text" data-i18n-placeholder="产品名称" name="name" class="layui-input"
+                                            lay-verify="required" data-i18n-lay-reqtext="必填项不能为空" />
+                                    </div>
+                                </div>
+                                <div class="layui-col-md6 layui-col-xs6">
+                                    <label class="layui-form-label" style="width:auto" data-i18n-text="产品代码"></label>
+                                    <div class="layui-input-block" style="margin-left:150px;">
+                                        <input type="text" data-i18n-placeholder="产品代码" name="code" class="layui-input"
+                                            lay-verify="required" data-i18n-lay-reqtext="必填项不能为空" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item layui-row">
+                                <div class="layui-col-md6 layui-col-xs6 ">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label" style="width:auto"
+                                            data-i18n-text="产品型号"></label>
+                                        <div class="layui-input-block" style="margin-left:150px;">
+                                            <input type="text" data-i18n-placeholder="产品型号" name="spec"
+                                                class="layui-input" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md6 layui-col-xs6 ">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label" style="width:auto"
+                                            data-i18n-text="产品条码"></label>
+                                        <div class="layui-input-block" style="margin-left:150px;">
+                                            <input type="text" data-i18n-placeholder="产品条码" name="barCode"
+                                                class="layui-input" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="layui-form-item layui-row">
+                                <div class="layui-col-md6 layui-col-xs6 ">
+                                    <label class="layui-form-label" style="width: auto;"
+                                        data-i18n-text="按配套成套出入库"></label>
+                                    <div class="layui-input-block" style="margin-left:150px;">
+                                        <input type="checkbox" name="isKeepRatio" lay-filter="isKeepRatio"
+                                            lay-skin="switch" data-i18n-lay-text="是|否" checked />
+                                    </div>
+                                </div>
+                                <div class="layui-col-md6 layui-col-xs6 ">
+
+                                    <label class="layui-form-label" style="width:auto" data-i18n-text="是否混放"></label>
+                                    <div class="layui-input-block" style="margin-left:150px;">
+                                        <input type="checkbox" name="isMix" lay-filter="isMix" lay-skin="switch"
+                                            data-i18n-lay-text="是|否" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item layui-row">
+                                <div class="layui-col-md6 layui-col-xs6 ">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label" style="width:auto"
+                                            data-i18n-text="存储料盒类型"></label>
+                                        <div class="layui-input-block" style="margin-left:150px;">
+                                            <select name="trayTypeId" id="trayTypeId">
+                                                <option value="-1" data-i18n-text="请选择"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md6 layui-col-xs6 ">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label" style="width:auto"
+                                            data-i18n-text="每盒存放数量"></label>
+                                        <div class="layui-input-block" style="margin-left:150px;">
+                                            <input type="number" data-i18n-placeholder="存放数量" name="storeQuantity"
+                                                class="layui-input" lay-verify="required|number" value="0" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item layui-row">
+                                <div class="layui-col-md6 layui-col-xs6 ">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label" style="width:auto"
+                                            data-i18n-text="安全库存"></label>
+                                        <div class="layui-input-block" style="margin-left:150px;">
+                                            <input type="number" data-i18n-placeholder="安全库存" name="safeStock"
+                                                class="layui-input" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-md6 layui-col-xs6 ">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label" style="width:auto"
+                                            data-i18n-text="是否自动匹配工位"></label>
+                                        <div class="layui-input-block" style="margin-left:150px;">
+                                            <input type="checkbox" name="isAllocateStation"
+                                                lay-filter="isAllocateStation" lay-skin="switch"
+                                                data-i18n-lay-text="是|否" checked />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item layui-row">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label" style="width:auto" data-i18n-text="示意图"></label>
+                                    <div class="layui-input-block" style="margin-left:150px;">
+                                        <button type="button" class="layui-btn" id="ID-upload-demo-btn">
+                                            <i class="layui-icon layui-icon-upload"></i>
+                                            <span data-i18n-text="请点击选择图片"></span>
+                                        </button>
+                                        <input type="hidden" name="img" id="img" />
+                                    </div>
+                                </div>div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="layui-form-item">
+                                <table id="table-table" lay-filter="table-table"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="bottom">
+
+            <div class="button-container">
+                <button class="pear-btn pear-btn-success pear-btn-md next" lay-submit lay-filter="formStep">
+                    &emsp;
+                    <span data-i18n-text="下一步"></span>
+                    &emsp;
+                </button>
+                <button class="pear-btn pear-btn-success pear-btn-md pre" lay-submit lay-filter="formStep"
+                    style="display: none;">
+                    &emsp;
+                    <span data-i18n-text="上一步"></span>
+                    &emsp;
+                </button>
+                <button type="submit" class="pear-btn pear-btn-primary pear-btn-md submit" lay-submit
+                    lay-filter="formSubmit" style="display: none;">
+                    <i class="layui-icon layui-icon-ok"></i>
+                    <span data-i18n-text="提交"></span>
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <script type="text/html" id="table-toolbar">
+    <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
+        <i class="layui-icon layui-icon-add-1"></i>
+      <span data-i18n-text="新增一行"></span>
+    </button>
+    <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="remove">
+        <i class="layui-icon layui-icon-delete"></i>
+       <span data-i18n-text="删除一行"></span>
+    </button>
+    </script>
+
+    <script src="/component/preview/js/jquery.js"></script>
+    <script src="/component/i18n/jquery.i18n.properties.js"></script>
+    <script src="/component/layui/layui.js"></script>
+    <script src="/component/pear/pear.js"></script>
+    <script>
+        layui.use(['form', 'step', 'element', 'common', 'apis', 'upload', 'lang'], function () {
+            var $ = layui.$,
+                form = layui.form,
+                step = layui.step,
+                table = layui.table,
+                common = layui.common,
+                apis = layui.apis,
+                laydate = layui.laydate,
+                layer = layui.layer,
+                lang = layui.lang,
+                upload = layui.upload;
+
+            lang.render();
+            form.render();
+            var productId = common.GetQueryString('tableId');
+
+            step.render({
+                elem: '#stepForm',
+                filter: 'stepForm',
+                width: '100%',
+                height: '400px',
+                stepItems: [{
+                    title: $.i18n.prop('产品信息')
+                }, {
+                    title: $.i18n.prop('产品Bom')
+                }]
+            });
+
+            form.on('submit(formStep)', function (data) {
+                step.pre('#stepForm');
+                $(".next").hide();
+                $(".pre").show();
+                $(".submit").show();
+                return false;
+            });;
+
+            $('.pre').click(function () {
+                step.pre('#stepForm');
+                $(".next").show();
+                $(".pre").hide();
+                $(".submit").hide();
+                return false;
+            });
+
+
+            //获取到料盒类型
+            common.get(function (res) {
+                layui.each(res, function (i, item) {
+                    $("#trayTypeId").append(new Option(item.name, item.id));
+                });
+            }, apis.GetTrayTypeList);
+            var materialList;
+            var list_Material_Select;
+            common.get(function (res) {
+                list_Material_Select=materialList = res;
+            }, apis.GetMaterialList);
+            var product;
+            var bom_data = [];
+            var index = 1;
+            common.get(function (res) {
+                form.val('product-form', res.item1);
+                form.val('product-form', {
+                    isParent: res.item1.parentId == 0 ? true : false
+                });
+                if (res.item1.parentId == 0) {
+                    $("#parentId").attr('disabled', 'disabled');
+                    $(".next").hide();
+                    $(".submit").show();
+                }
+                product = res.item1;
+                res.item2.forEach(element => {
+                    bom_data.push({ id: index, materialId: element.materialId, ratio: element.ratio });
+                    index++;
+                });
+            }, apis.GetProductAndBomById, { productId: productId });
+
+
+
+            form.render();
+            form.on('switch(isParent)', function (obj) {
+                var checkedState = obj.elem.checked ? true : false;
+                if (checkedState) {
+                    $("#parentId").attr('disabled', 'disabled');
+                    $(".next").hide();
+                    $(".submit").show();
+                }
+                else {
+                    $("#parentId").removeAttr('disabled');
+                    $(".next").show();
+                    $(".pre").hide();
+                    $(".submit").hide();
+                }
+                form.render();
+            });
+            let cols = [
+                [
+                    {
+                        title: $.i18n.prop('物料名称'),
+                        align: 'center',
+                        templet: function (d) {
+                            var html = "<select name='materialId' lay-filter='materialId' data-id='" + d.id + "' lay-search ><option value=''>"+$.i18n.prop('请选择')+"</option>";
+
+                            layui.each(list_Material_Select, function (i, item) {
+                                html += "<option value='" + item.id + "' " + (item.id == d.materialId ? 'selected' : '') + ">" + item.name + (common.isNull(item.spec) ? "" : "_" + item.spec) + "</option>"
+                            });
+                            html += "</select>";
+                            return html;
+                        }
+                    },
+                    {
+                        title: $.i18n.prop('物料比例'),
+                        align: 'center',
+                        templet: function (d) {
+                            var html = "<input type='text' data-id='" + d.id + "' class='layui-input' value='" + d.ratio + "' onblur='window.ChangeCount(this)' oninput='window.ChangeCount(this)' />";
+                            return html;
+                        }
+                    }
+                ]
+            ]
+            var table_table = table.render({
+                elem: '#table-table',
+                data: bom_data,
+                cols: cols,
+                skin: 'line',
+                height: 450,
+                limit: 999,
+                text: { none: $.i18n.prop('无数据') },
+                toolbar: '#table-toolbar',
+                defaultToolbar: [],
+                done: function (d) {
+                    lang.render();
+                }
+            });
+
+            table.on('toolbar(table-table)', function (obj) {
+                if (obj.event === 'add') {
+                    window.add();
+                } else if (obj.event === 'remove') {
+                    window.remove();
+                }
+            });
+            form.on('select(materialId)', function (data) {
+                var id = $(data.elem).data('id');
+                var find_data = bom_data.find(x => x.id == id);
+                find_data.materialId = data.value;
+            });
+            window.ChangeCount = function (obj) {
+                var id = $(obj).data('id');
+                var find_data = bom_data.find(x => x.id == id);
+                find_data.ratio = $(obj).val();
+            };
+
+            window.add = function () {
+                bom_data.push({
+                    id: index,
+                    materialId: 0,
+                    ratio: 1
+                });
+                index++;
+                window.refresh();
+            };
+            window.remove = function () {
+                bom_data.splice(index - 2, 1);
+                index--;
+                window.refresh();
+            };
+            window.refresh = function (param) {
+                table_table.reload({
+                    data: bom_data
+                });
+            };
+            function checkData(data) {
+                var resState = true;
+                if ($("input[name='isParent']").is(":checked")) return true;
+                if (data == null || data.length <= 0) return;
+                var index = 1;
+                data.forEach(element => {
+                    if (element.materialId <= 0) {
+                        layer.alert('请选择第' + index + '行的物料！', { icon: 2 });
+                        resState = false;
+                        return;
+                    }
+                    if (element.ratio <= 0) {
+                        layer.alert('第' + index + '行物料比例输入有误！');
+                        resState = false;
+                        return;
+                    }
+                    index++;
+                });
+                return resState;
+            }
+            //表单验证
+            form.verify({
+
+                checkProductName: function (value, item) {
+                    var count = false;
+                    common.post(function (res) {
+                        count = res;
+                    }, apis.CheckProductName, { name: value });
+                    if (count)
+                        return $.i18n.prop("产品已经存在");
+                },
+                selectProduct: function (value, item) {
+                    var isParent = $('input[name="isParent"]').is(':checked');
+                    if (!isParent && value == 0) {
+                        return $.i18n.prop('请选择所属产品');
+                    }
+                }
+            });
+            // 单图片上传
+            var uploadInst = upload.render({
+                elem: '#ID-upload-demo-btn',
+                auto: false,
+                choose: function (obj) {
+                    // 预读本地文件示例，不支持ie8
+                    obj.preview(function (index, file, result) {
+                        //$('#ID-upload-demo-img').attr('src', result); // 图片链接（base64）
+                        $("#img_base64").val(result);
+                    });
+                }
+            });
+            //表单提交
+            form.on("submit(formSubmit)", function (data) {
+                if (checkData(bom_data)) {
+                    var productForm = form.val("product-form");
+                    product = $.extend(product, productForm);
+                    product.isMix = product.isMix === 'on' ? true : false;
+                    product.isKeepRatio = product.isKeepRatio === 'on' ? true : false;
+                    product.isDefault = product.isDefault === 'on' ? true : false;
+                    product.isAllocateStation = product.isAllocateStation === 'on' ? true : false;
+                    product.safeStock = common.isNull(product.safeStock) ? 0 : product.safeStock;
+                    var data = { product: product, productBom: bom_data };
+                    common.post(function (res) {
+                        layer.msg($.i18n.prop('提交成功'), {
+                            icon: 1, time: 2000, end: function () {
+                                parent.layer.closeAll();
+                            }
+                        });
+                    }, apis.UpdateProductAndBom, data);
+                }
+            });
+
+        })
+    </script>
+</body>
+
+</html>

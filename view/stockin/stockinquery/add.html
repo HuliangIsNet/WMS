@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>添加物料</title>
+    <link rel="stylesheet" href="/component/pear/css/pear.css" />
+
+</head>
+
+<body>
+    <form class="layui-form" lay-filter="wms-form" action="javascript:void(0);"
+        onkeydown="if(event.keyCode==13)return false;">
+        <div class="mainBox">
+            <div class="main-container">
+                <div class="layui-form-item">
+                    <div class="layui-col-md6 layui-col-xs6 ">
+                        <label class="layui-form-label">物料名称:</label>
+                        <div class="layui-input-block">
+                            <video id="video" width="250" height="200"></video>
+                        </div>
+                    </div>
+                    <div class="layui-col-md6 layui-col-xs6 ">
+                        <div class="layui-input-block">
+                            <canvas id="canvas" width="250" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-col-md6 layui-col-xs6 ">
+                        <label class="layui-form-label"></label>
+                        <div class="layui-input-block">
+                            <button id="ps">拍摄</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bottom">
+            <div class="button-container">
+                <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit lay-filter="formSubmit">
+                    <i class="layui-icon layui-icon-ok"></i>
+                    提交
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <script src="/component/layui/layui.js"></script>
+    <script src="/component/pear/pear.js"></script>
+    <script>
+        layui.use(['form', 'common', 'apis'], function () {
+            var $ = layui.$,
+                form = layui.form,
+                common = layui.common,
+                apis = layui.apis,
+                layer = layui.layer;
+            var devices = window.navigator.mediaDevices;
+            devices.getUserMedia({
+                video: { width: 250, height: 200 }
+            }).then((ms) => {
+                this.video = document.querySelector("video");
+                this.video.srcObject = ms;
+                this.video.onloadedmetadata = function (e) {
+                    video.play();
+                };
+            }).catch((err) => { }
+            );
+           
+            $("#ps").click(function () {
+                let canvas = document.getElementById("canvas").getContext("2d");
+                canvas.drawImage(document.querySelector("video"), 0, 0, 250, 200);
+                let image = new Image();
+                let myImage = canvas.canvas.toDataURL("image/png");
+            });
+            //点击拍摄按钮的事件
+
+           
+            //     //上传服务器
+            // update(file) {
+            //   let param = new FormData(); //创建form对象
+            //   param.append("file", file, file.name); //通过append向form对象添加数据
+
+            //   let url = process.env.VUE_APP_BASE_API + "/file/upload";
+            //   let headers = {
+            //     Authorization: "Bearer " + getToken(),
+            //   };
+            //   axios
+            //     .post(url, param, { headers: headers })
+            //     .then((response) => {
+            //       if (response.data.code == 200) {
+            //         if (this.uplodebtn == 1) {
+            //           this.lvimage.push(response.data.data.url);
+            //         } else if (this.uplodebtn == 2) {
+            //           this.djimage.push(response.data.data.url);
+            //         } else {
+            //           this.zsimage.push(response.data.data.url);
+            //         }
+            //       }
+            //     })
+            //     .catch((e) => {});
+            // }
+            // //表单验证
+            // form.verify({
+            //     checkmaterialName: function (value, item) {
+            //         var material = form.val("wms-form");
+            //         var count = false;
+            //         common.post(function (res) {
+            //             count = res;
+            //         }, apis.CheckMaterial, material);
+            //         if (count)
+            //             return "物料已经存在";
+            //     },
+            //     checkMaterialBarCode: function (value, item) {
+            //         var count = false;
+            //         common.get(function (res) {
+            //             count = res;
+            //         }, apis.CheckMaterialBarCode, { barCode: value });
+            //         if (count)
+            //             return "物料条码已经存在"
+            //     }
+            // });
+            // //表单提交
+            // form.on("submit(formSubmit)", function (data) {
+            //     var form_data = form.val("wms-form");
+            //     form_data.isCreateProduct = form_data.isCreateProduct === 'on' ? true : false;
+            //     common.post(function (res) {
+            //         layer.msg('保存成功', {
+            //             icon: 1, time: 2000, end: function () {
+            //                 parent.layer.closeAll();
+            //             }
+            //         });
+            //     }, apis.AddMaterial, form_data);
+            // });
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,87 @@
+{
+	"code": 0,
+	"msg": "...",
+	"count": 3,
+	"data": [
+		{
+			"materialName": "导入物料1",
+			"basicProductId": "1494191722014257154",
+			"materialNo": "1",
+			"specification": "规格型号1",
+			"materialCode": "物料标识码1",
+			"qualityLevel": "质量等级1"
+		},
+		{
+			"materialName": "导入物料2",
+			"basicProductId": "1494191722014257154",
+			"materialNo": "2",
+			"specification": "规格型号2",
+			"materialCode": "物料标识码2",
+			"qualityLevel": "质量等级2"
+		},
+		{
+			"materialName": "导入物料3",
+			"basicProductId": "1494191722014257154",
+			"materialNo": "3",
+			"specification": "规格型号3",
+			"materialCode": "物料标识码3",
+			"qualityLevel": "质量等级3"
+		},
+		{
+			"materialName": "导入物料4",
+			"basicProductId": "1494191722014257154",
+			"materialNo": "4",
+			"specification": "规格型号4",
+			"materialCode": "物料标识码4",
+			"qualityLevel": "质量等级4"
+		},
+		{
+			"materialName": "导入物料5",
+			"basicProductId": "1494191722014257154",
+			"materialNo": "5",
+			"specification": "规格型号5",
+			"materialCode": "物料标识码5",
+			"qualityLevel": "质量等级5"
+		},
+		{
+			"materialName": "导入物料6",
+			"basicProductId": "1494191722014257154",
+			"materialNo": "6",
+			"specification": "规格型号6",
+			"materialCode": "物料标识码6",
+			"qualityLevel": "质量等级6"
+		},
+		{
+			"materialName": "导入物料7",
+			"basicProductId": "1494191722014257154",
+			"materialNo": "7",
+			"specification": "规格型号7",
+			"materialCode": "物料标识码7",
+			"qualityLevel": "质量等级7"
+		},
+		{
+			"materialName": "导入物料8",
+			"basicProductId": "1494191722014257154",
+			"materialNo": "8",
+			"specification": "规格型号8",
+			"materialCode": "物料标识码8",
+			"qualityLevel": "质量等级8"
+		},
+		{
+			"materialName": "导入物料9",
+			"basicProductId": "1494191722014257154",
+			"materialNo": "9",
+			"specification": "规格型号9",
+			"materialCode": "物料标识码9",
+			"qualityLevel": "质量等级9"
+		},
+		{
+			"materialName": "导入物料10",
+			"basicProductId": "1494191722014257154",
+			"materialNo": "10",
+			"specification": "规格型号10",
+			"materialCode": "物料标识码10",
+			"qualityLevel": "质量等级10"
+		}
+	]
+}

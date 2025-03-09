@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta id="i18n_pagename" content="hopper-common" />
+    <title>料斗管理</title>
+    <link rel="stylesheet" href="/component/pear/css/pear.css" />
+    <meta id="i18n_pagename" content="container-common" />
+</head>
+
+<body class="pear-container">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label" data-i18n-text="料斗序号"></label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="no" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="wms-query">
+                            <i class="layui-icon layui-icon-search"></i>
+                            <span data-i18n-text="查询"></span>
+                        </button>
+                        <button type="reset" class="pear-btn pear-btn-md">
+                            <i class="layui-icon layui-icon-refresh"></i>
+                            <span data-i18n-text="重置"></span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="wms-table" lay-filter="wms-table"></table>
+        </div>
+    </div>
+    <script type="text/html" id="wms-toolbar">
+        <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
+            <i class="layui-icon layui-icon-add-1"></i>
+            <span data-i18n-text="新增"></span>
+            
+
+        </button>
+
+        <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="batchPrint">
+            <i class="layui-icon layui-icon-print"></i>
+            <span data-i18n-text="打印条码"></span>
+            
+        </button>
+
+        <script type="text/html" id="wms-bar">
+            <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit"><i class="layui-icon layui-icon-edit"></i></button>
+            <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="print"><i class="layui-icon layui-icon-print"></i></button>
+        </script>
+        <script src="/component/preview/js/jquery.js"></script>
+        <script src="/component/i18n/jquery.i18n.properties.js"></script>
+        <script src="/component/layui/layui.js"></script>
+        <script src="/component/pear/pear.js"></script>
+        <script src="/component/lodop/LodopFuncs.js"></script>
+        <script>
+            layui.use(['table', 'form', 'jquery', 'common', "apis", 'lang'], function () {
+                let table = layui.table;
+                let form = layui.form;
+                let $ = layui.jquery;
+                let common = layui.common;
+                let apis = layui.apis;
+                let lang = layui.lang;
+                lang.render();
+                form.render();
+                let MODULE_PATH = "";
+                var containerId = common.GetQueryString("containerId");
+                var containerName = common.GetQueryString("containerName");
+                var weight = common.GetQueryString("weight");
+                var where = { containerId: containerId };
+                let cols = [
+                    [
+                        {
+                            type: 'checkbox'
+                        },
+                        {
+                            title: $.i18n.prop('货柜名称'),
+                            align: 'center',
+                            templet: function (d) {
+                                return containerName;
+                            }
+                        },
+                        {
+                            title: $.i18n.prop( '料斗名称'),
+                            field: 'name',
+                            align: 'center'
+                        },
+                        {
+                            title: $.i18n.prop('料斗编号'),
+                            field: 'no',
+                            align: 'center'
+                        },
+                        {
+                            title: $.i18n.prop('列数'),
+                            field: 'columns',
+                            align: 'center'
+                        },
+                        {
+                            title: $.i18n.prop( '行数'),
+                            field: 'rows',
+                            align: 'center'
+                        },
+                        {
+                            title: $.i18n.prop('运行高度'),
+                            field: 'runHeight',
+                            align: 'center'
+                        },
+                        {
+                            title: $.i18n.prop( '条形码'),
+                            field: 'barCode',
+                            width: 200,
+                            align: 'center'
+                        },
+                        {
+                            title: $.i18n.prop('操作'),
+                            toolbar: '#wms-bar',
+                            align: 'center',
+                            width: 130
+                        }
+                    ]
+                ]
+                var wms_table = table.render({
+                    elem: '#wms-table',
+                    url: apis.GetHopperPageList,
+                    where: where,
+                    page: { layout: ['prev', 'page', 'next', 'count'], countText: [$.i18n.prop('共') + ' ', ' ' + $.i18n.prop('条')] },
+                    text: { none: $.i18n.prop('无数据') },
+                    cols: cols,
+                    skin: 'line',
+                    toolbar: '#wms-toolbar',
+                    defaultToolbar: false,
+                    response: {
+                        statusCode: "200"
+                    },
+                    request: {
+                        pageName: 'pageIndex',//页码的参数名称，默认：page
+                        limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                    },
+                    done: function (d) {
+                        lang.render();
+                    }
+                });
+
+                table.on('toolbar(wms-table)', function (obj) {
+                    if (obj.event === 'add') {
+                        window.add();
+                    }
+                    else if (obj.event === 'batchPrint') {
+                        window.BatchPrint(obj);
+                    }
+                });
+                table.on('tool(wms-table)', function (obj) {
+                    if (obj.event === 'edit') {
+                        window.edit(obj);
+                    } else if (obj.event === 'print') {
+                        window.print(obj.data);
+                    }
+                });
+
+
+                form.on('submit(wms-query)', function (data) {
+                    where = $.extend(where, data.field);
+
+                    hopper_table.reload({ where: where }, true);
+                    // table.reload('user-table', {
+                    //     where: data.field
+                    // })
+                    return false;
+                });
+
+
+                window.add = function () {
+                    layer.open({
+                        type: 2,
+                        title: $.i18n.prop( '新增'),
+                        shade: 0.1,
+                        area: ['600px', '450px'],
+                        content: MODULE_PATH + 'add.html?containerId=' + escape(containerId),
+                        end: function () {
+                            window.refresh();
+                        }
+                    });
+                }
+
+                window.edit = function (obj) {
+                    layer.open({
+                        type: 2,
+                        title: $.i18n.prop( '修改'),
+                        shade: 0.1,
+                        area: ['600px', '450px'],
+                        content: MODULE_PATH + 'edit.html?containerId=' + escape(containerId) + '&hopperId=' + escape(obj.data.id),
+                        end: function () {
+                            window.refresh();
+                        }
+                    });
+                }
+                window.BatchPrint = function (obj) {
+                    let data = table.checkStatus(obj.config.id).data;
+                    if (data === null || data.length < 0) {
+                        layer.alert($.i18n.prop('请选择要打印的料斗信息'));
+                        return;
+                    }
+                    else {
+                        var newIndex = 0;
+                        var LODOP;
+                        $.each(data, function (index, item) {
+                            window.print(item);
+                            // var x = 5;
+                            // if (newIndex == 0) {
+                            //     LODOP = getLodop();
+                            //     LODOP.PRINT_INIT("");
+                            //     LODOP.SET_PRINT_PAGESIZE(2, 1000, 1500, 'strPageName');
+                            //     createContent(x, item);
+
+                            // }
+                            // else {
+
+                            //     x += 50;
+                            //     createContent(x, item);
+                            // }
+                            // if (newIndex == 1 || index == data.length - 1) {
+                            //     // LODOP.PREVIEW();
+                            //     LODOP.PRINT();
+                            // }
+                            // newIndex = newIndex === 0 ? 1 : 0;
+                        });
+                    }
+                }
+                window.print = function (obj) {
+                    console.log(obj);
+                    var LODOP = getLodop();
+                    LODOP.PRINT_INIT("");
+                    LODOP.SET_PRINT_PAGESIZE(1, 600, 400, 'strPageName');
+                    var x = 5;
+                    LODOP.ADD_PRINT_TEXT(x + "mm", "1mm", "30mm", "18mm", obj.name);
+                    LODOP.SET_PRINT_STYLEA(0, "FontSize", 50);
+                    LODOP.ADD_PRINT_BARCODE(x + "mm", "20mm", "45mm", "18mm", '128Auto', obj.barCode);
+                    LODOP.SET_PRINT_STYLEA(0, "ItemShowBarText", 0);
+                    LODOP.ADD_PRINT_TEXT(x + 20 + "mm", "2mm", "60mm", "18mm", "Max:" + obj.weight + "kg");
+                    LODOP.SET_PRINT_STYLEA(0, "FontSize", 35);
+
+                    // LODOP.ADD_PRINT_BARCODE(x + "mm", "20mm", "55mm", "18mm", '128Auto', obj.barCode);
+
+
+                    //LODOP.PREVIEW();
+                    LODOP.PRINT();
+                }
+                window.createContent = function (x, obj) {
+                    //x，y，长，宽
+                    LODOP.ADD_PRINT_TEXT(x + "mm", "2mm", "500mm", "50mm", containerName);
+                    LODOP.SET_PRINT_STYLEA(0, "FontSize", 25);
+                    LODOP.ADD_PRINT_BARCODE(x - 1 + "mm", "90mm", "60mm", "10mm", '128Auto', obj.barCode);
+                    LODOP.ADD_PRINT_TEXT(x + 12 + "mm", "100mm", "40mm", "10mm", obj.name);
+                    LODOP.SET_PRINT_STYLEA(0, "FontSize", 15);
+                    LODOP.ADD_PRINT_TEXT(x + 15 + "mm", "5mm", "1400mm", "300mm", "MAX:" + weight + "KG");
+                    LODOP.SET_PRINT_STYLEA(0, "FontSize", 80);
+                }
+                window.refresh = function (param) {
+                    wms_table.reload();
+                }
+            })
+        </script>
+</body>
+
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>添加物料</title>
+    <link rel="stylesheet" href="/component/pear/css/pear.css" />
+
+</head>
+
+<body>
+    <form class="layui-form" lay-filter="wms-form" action="javascript:void(0);"
+        onkeydown="if(event.keyCode==13)return false;">
+        <div class="mainBox">
+            <div class="main-container">
+                <div class="layui-form-item">
+                    <div class="layui-col-md12 layui-col-xs12 ">
+                        <label class="layui-form-label" style="width:auto">货柜名称:</label>
+                        <div class="layui-input-block" style="margin-left:200px;">
+                            <select class="layui-select" id="containerKey" name="containerKey">
+
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" style="width:auto">是否有扫描模块:</label>
+                        <div class="layui-input-block" style="margin-left:200px;">
+                            <input type="checkbox" name="ifHasScanningModule" lay-filter="ifHasScanningModule"
+                                lay-skin="switch" lay-text="是|否" />
+                        </div>
+                    </div>
+                    <div class="layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" style="width:auto">是否有人脸认证模块:</label>
+                        <div class="layui-input-block" style="margin-left:200px;">
+                            <input type="checkbox" name="ifHasFaceRecognition" lay-filter="ifHasFaceRecognition"
+                                lay-skin="switch" lay-text="是|否" />
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" style="width:auto">是否有指纹模块:</label>
+                        <div class="layui-input-block" style="margin-left:200px;">
+                            <input type="checkbox" name="ifHasFingerPrintRecognition"
+                                lay-filter="ifHasFingerPrintRecognition" lay-skin="switch" lay-text="是|否" />
+                        </div>
+                    </div>
+                    <div class="layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" style="width:auto">是否有ID认证模块:</label>
+                        <div class="layui-input-block" style="margin-left:200px;">
+                            <input type="checkbox" name="ifHasIdentification" lay-filter="ifHasIdentification"
+                                lay-skin="switch" lay-text="是|否" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" style="width:auto">是否有货位指示模块:</label>
+                        <div class="layui-input-block" style="margin-left:200px;">
+                            <input type="checkbox" name="ifHasLocationIndication" lay-filter="ifHasLocationIndication"
+                                lay-skin="switch" lay-text="是|否" />
+                        </div>
+                    </div>
+                    <div class="layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" style="width:auto">是否有RRID模块:</label>
+                        <div class="layui-input-block" style="margin-left:200px;">
+                            <input type="checkbox" name="ifHasRFIDModule" lay-filter="ifHasRFIDModule" lay-skin="switch"
+                                lay-text="是|否" />
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" style="width:auto">是否有LED模块:</label>
+                        <div class="layui-input-block" style="margin-left:200px;">
+                            <input type="checkbox" name="ifHasLEDModule" lay-filter="ifHasLEDModule" lay-skin="switch"
+                                lay-text="是|否" />
+                        </div>
+                    </div>
+                    <div class="layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" style="width:auto">是否有邮件模块:</label>
+                        <div class="layui-input-block" style="margin-left:200px;">
+                            <input type="checkbox" name="ifHasEmailModule" lay-filter="ifHasEmailModule"
+                                lay-skin="switch" lay-text="是|否" />
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" style="width:auto">是否有多工作台:</label>
+                        <div class="layui-input-block" style="margin-left:200px;">
+                            <input type="checkbox" name="ifHasMultiWorkBench" lay-filter="ifHasMultiWorkBench"
+                                lay-skin="switch" lay-text="是|否" />
+                        </div>
+                    </div>
+                    <div class="layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" style="width:auto">是否有打印模块:</label>
+                        <div class="layui-input-block" style="margin-left:200px;">
+                            <input type="checkbox" name="ifHasPrintModule" lay-filter="ifHasPrintModule"
+                                lay-skin="switch" lay-text="是|否" />
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" style="width:auto">是否有称重模块:</label>
+                        <div class="layui-input-block" style="margin-left:200px;">
+                            <input type="checkbox" name="ifHasWeighingModule" lay-filter="ifHasWeighingModule"
+                                lay-skin="switch" lay-text="是|否" />
+                        </div>
+                    </div>
+                    <div class="layui-col-md6 layui-col-xs6">
+                        <label class="layui-form-label" style="width:auto">是否有高度测量模块:</label>
+                        <div class="layui-input-block" style="margin-left:200px;">
+                            <input type="checkbox" name="ifHasHeightGaugeModule" lay-filter="ifHasHeightGaugeModule"
+                                lay-skin="switch" lay-text="是|否" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="bottom">
+            <div class="button-container">
+                <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit lay-filter="formSubmit">
+                    <i class="layui-icon layui-icon-ok"></i>
+                    提交
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <script src="/component/layui/layui.js"></script>
+    <script src="/component/pear/pear.js"></script>
+    <script>
+        layui.use(['form', 'common', 'apis'], function () {
+            var $ = layui.$,
+                form = layui.form,
+                common = layui.common,
+                apis = layui.apis,
+                layer = layui.layer;
+            common.get(function (res) {
+                console.log(res);
+                $.each(res, function (i, item) {
+                    $("#containerKey").append('<option value=' + item.key + '>' + item.name + '</option>')
+                });
+                form.render();
+            }, apis.GetContainerList);
+
+            //表单提交
+            form.on("submit(formSubmit)", function (data) {
+                var form_data = form.val("wms-form");
+                form_data.ifHasScanningModule = form_data.ifHasScanningModule === 'on' ? true : false;
+                form_data.ifHasFaceRecognition = form_data.ifHasFaceRecognition === 'on' ? true : false;
+                form_data.ifHasFingerPrintRecognition = form_data.ifHasFingerPrintRecognition === 'on' ? true : false;
+                form_data.ifHasIdentification = form_data.ifHasIdentification === 'on' ? true : false;
+                form_data.ifHasWeighingModule = form_data.ifHasWeighingModule === 'on' ? true : false;
+                form_data.ifHasLocationIndication = form_data.ifHasLocationIndication === 'on' ? true : false; 
+                form_data.ifHasRFIDModule = form_data.ifHasRFIDModule === 'on' ? true : false;
+                form_data.ifHasLEDModule = form_data.ifHasLEDModule === 'on' ? true : false;
+                form_data.ifHasEmailModule = form_data.ifHasEmailModule === 'on' ? true : false;
+                form_data.ifHasMultiWorkBench = form_data.ifHasMultiWorkBench === 'on' ? true : false;
+                form_data.ifHasMultiWorkBench = form_data.ifHasMultiWorkBench === 'on' ? true : false;
+                form_data.ifHasHeightGaugeModule = form_data.ifHasHeightGaugeModule === 'on' ? true : false;
+                common.post(function (res) {
+                    layer.msg('保存成功', {
+                        icon: 1, time: 2000, end: function () {
+                            parent.layer.closeAll();
+                        }
+                    });
+                }, apis.AddContainerFunctionModule, form_data);
+            });
+        })
+    </script>
+</body>
+
+</html>

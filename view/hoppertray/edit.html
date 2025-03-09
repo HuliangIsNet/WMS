@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>添加托盘</title>
+    <link rel="stylesheet" href="/component/pear/css/pear.css" />
+
+</head>
+
+<body class="pear-container">
+    <div class="layui-card">
+        <div class="layui-card-body" style="overflow-x: hidden;">
+            <form class="layui-form" lay-filter="tray-form" action="javascript:void(0);">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">货柜:</label>
+                    <div class="layui-input-block">
+                        <select name="containerId" id="containerId" lay-filter="containerId" lay-search></select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">料斗:</label>
+                    <div class="layui-input-block">
+                        <select name="hopperId" id="hopperId" lay-search></select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">料盒:</label>
+                    <div class="layui-input-block">
+                        <select name="trayId" id="trayId" lay-search></select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">所在列:</label>
+                    <div class="layui-input-block">
+                        <input type="number" placeholder="所在列" name="column" class="layui-input"
+                            lay-verify="required|number" />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">所在行:</label>
+                    <div class="layui-input-block">
+                        <input type="number" placeholder="所在行" name="row" class="layui-input"
+                            lay-verify="required|number" />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="pear-btn pear-btn-success" lay-submit lay-filter="formSubmit">
+                            &emsp;确认保存&emsp;
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="/component/layui/layui.js"></script>
+    <script src="/component/pear/pear.js"></script>
+    <script>
+        layui.use(['form', 'element', 'common', 'apis'], function () {
+            var $ = layui.$,
+                form = layui.form,
+                common = layui.common,
+                apis = layui.apis,
+                laydate = layui.laydate,
+                layer = layui.layer;
+
+            //货柜
+            common.get(null, apis.GetContainerList, function (res) {
+                layui.each(res, function (i, item) {
+                    $("#containerId").append(new Option(item.name, item.id));
+                    if (i == 0)
+                        GetHopperList(item.id);
+                });
+            });
+            function GetHopperList(containerId) {
+                $("#hopperId").empty();
+                //料斗
+                common.get({ containerId: containerId }, apis.GetHopperList, function (res) {
+                    layui.each(res, function (i, item) {
+                        $("#hopperId").append(new Option(item.name, item.id));
+                    });
+                });
+                form.render('select');
+            };
+
+            //料盒
+            common.get(null, apis.GetTrayList, function (res) {
+                layui.each(res, function (i, item) {
+                    $("#trayId").append(new Option(item.name, item.id));
+                });
+            });
+
+
+            var model;
+            var id = common.GetQueryString("id");
+            common.get({ id: id }, apis.GetHopperTrayModel, function (res) {
+                model = res;
+                GetHopperList(res.containerId);
+                form.val("tray-form", model);
+            });
+
+            form.render('select');
+
+
+            form.on('select(containerId)', function (obj) {
+                GetHopperList(obj.value);
+            });
+            //表单验证
+            form.verify({
+                checkTrayName: function (value, item) {
+                    var count = 0;
+                    common.get({ name: value }, apis.GetTrayCount, function (res) {
+                        count = res;
+                    });
+                    if (count > 0)
+                        return "名称已经存在";
+                }
+            });
+            //表单提交
+            form.on("submit(formSubmit)", function (data) {
+                var loading = layer.load();
+                var formTray = form.val("tray-form");
+                model=$.extend(model,formTray);
+                common.post(model, apis.UpdateHopperTray, null, function (res) {
+                    layer.close(loading);
+                    layer.msg('保存成功', {
+                        icon: 1, time: 2000, end: function () {
+                            parent.layer.closeAll();
+                        }
+                    });
+                });
+            });
+        })
+    </script>
+</body>
+
+</html>
