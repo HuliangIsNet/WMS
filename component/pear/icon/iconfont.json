@@ -1,0 +1,380 @@
+{
+  "id": "3406931",
+  "name": "WMS1.0",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "422495",
+      "name": "保存布局",
+      "font_class": "baocunbuju",
+      "unicode": "e6b4",
+      "unicode_decimal": 59060
+    },
+    {
+      "icon_id": "2076192",
+      "name": " 消息",
+      "font_class": "xiaoxi",
+      "unicode": "e86f",
+      "unicode_decimal": 59503
+    },
+    {
+      "icon_id": "5270863",
+      "name": "确认-充值成功",
+      "font_class": "queren",
+      "unicode": "e630",
+      "unicode_decimal": 58928
+    },
+    {
+      "icon_id": "1115027",
+      "name": "登出",
+      "font_class": "dengchu",
+      "unicode": "e62f",
+      "unicode_decimal": 58927
+    },
+    {
+      "icon_id": "8112837",
+      "name": "line",
+      "font_class": "line",
+      "unicode": "e641",
+      "unicode_decimal": 58945
+    },
+    {
+      "icon_id": "8113172",
+      "name": "set",
+      "font_class": "set",
+      "unicode": "e642",
+      "unicode_decimal": 58946
+    },
+    {
+      "icon_id": "14463291",
+      "name": "系统菜单",
+      "font_class": "xitongcaidan",
+      "unicode": "e762",
+      "unicode_decimal": 59234
+    },
+    {
+      "icon_id": "3238935",
+      "name": "销退收货",
+      "font_class": "xiaotuishouhuo-",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "3239718",
+      "name": "初始组品",
+      "font_class": "chushizupin",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "3239719",
+      "name": "仓储",
+      "font_class": "chaijiefenzu",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "3239720",
+      "name": "拆箱",
+      "font_class": "chaixiang",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    },
+    {
+      "icon_id": "3239721",
+      "name": "称重",
+      "font_class": "chengzhong",
+      "unicode": "e605",
+      "unicode_decimal": 58885
+    },
+    {
+      "icon_id": "3239722",
+      "name": "出库查询",
+      "font_class": "chukuchaxun",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
+      "icon_id": "3239723",
+      "name": "出库",
+      "font_class": "chuku",
+      "unicode": "e607",
+      "unicode_decimal": 58887
+    },
+    {
+      "icon_id": "3239724",
+      "name": "到货清点",
+      "font_class": "daohuoqingdian",
+      "unicode": "e608",
+      "unicode_decimal": 58888
+    },
+    {
+      "icon_id": "3239725",
+      "name": "库存查询",
+      "font_class": "kucunchaxun",
+      "unicode": "e609",
+      "unicode_decimal": 58889
+    },
+    {
+      "icon_id": "3239726",
+      "name": "库存",
+      "font_class": "kucun",
+      "unicode": "e60a",
+      "unicode_decimal": 58890
+    },
+    {
+      "icon_id": "3239727",
+      "name": "库内加工",
+      "font_class": "kuneijiagong",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "3239728",
+      "name": "模板管理",
+      "font_class": "mobanguanli",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "3239730",
+      "name": "工具",
+      "font_class": "gongju",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    },
+    {
+      "icon_id": "3239731",
+      "name": "批量移库",
+      "font_class": "piliangyiku",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "3239732",
+      "name": "入库清单",
+      "font_class": "rukuqingdan",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    },
+    {
+      "icon_id": "3239733",
+      "name": "入库",
+      "font_class": "ruku",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    },
+    {
+      "icon_id": "3239734",
+      "name": "调拨出库",
+      "font_class": "tiaobochuku",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "3239735",
+      "name": "调拨入库",
+      "font_class": "tiaoboruku",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
+      "icon_id": "3239736",
+      "name": "退货处理",
+      "font_class": "tuihuochuli",
+      "unicode": "e613",
+      "unicode_decimal": 58899
+    },
+    {
+      "icon_id": "3239737",
+      "name": "退货分类",
+      "font_class": "tuihuofenlei",
+      "unicode": "e614",
+      "unicode_decimal": 58900
+    },
+    {
+      "icon_id": "3239738",
+      "name": "装托",
+      "font_class": "zhuangtuo",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
+      "icon_id": "3239740",
+      "name": "移库",
+      "font_class": "yiku",
+      "unicode": "e616",
+      "unicode_decimal": 58902
+    },
+    {
+      "icon_id": "3239745",
+      "name": "装箱复核",
+      "font_class": "zhuangxiangfuhe",
+      "unicode": "e617",
+      "unicode_decimal": 58903
+    },
+    {
+      "icon_id": "3239747",
+      "name": "装箱验证",
+      "font_class": "zhuangxiangyanzheng",
+      "unicode": "e618",
+      "unicode_decimal": 58904
+    },
+    {
+      "icon_id": "3239975",
+      "name": "装箱",
+      "font_class": "zhuangxiang",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    },
+    {
+      "icon_id": "3239976",
+      "name": "仓储",
+      "font_class": "buhuoshangjia",
+      "unicode": "e61a",
+      "unicode_decimal": 58906
+    },
+    {
+      "icon_id": "3239977",
+      "name": "拣货下架",
+      "font_class": "jianhuoxiajia",
+      "unicode": "e61b",
+      "unicode_decimal": 58907
+    },
+    {
+      "icon_id": "3240012",
+      "name": "盘点",
+      "font_class": "pandian",
+      "unicode": "e61c",
+      "unicode_decimal": 58908
+    },
+    {
+      "icon_id": "3240132",
+      "name": "商品分类",
+      "font_class": "shangpinfenlei",
+      "unicode": "e61d",
+      "unicode_decimal": 58909
+    },
+    {
+      "icon_id": "3247650",
+      "name": "仓储",
+      "font_class": "SKUshibiema",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
+    },
+    {
+      "icon_id": "3247651",
+      "name": "SN号采集",
+      "font_class": "SNhaocaiji",
+      "unicode": "e61f",
+      "unicode_decimal": 58911
+    },
+    {
+      "icon_id": "3247652",
+      "name": "出库复核",
+      "font_class": "chukufuhe",
+      "unicode": "e620",
+      "unicode_decimal": 58912
+    },
+    {
+      "icon_id": "3247653",
+      "name": "仓储应用",
+      "font_class": "cangchuyingyong",
+      "unicode": "e621",
+      "unicode_decimal": 58913
+    },
+    {
+      "icon_id": "3247654",
+      "name": "采退入库",
+      "font_class": "caituiruku",
+      "unicode": "e622",
+      "unicode_decimal": 58914
+    },
+    {
+      "icon_id": "3247655",
+      "name": "打包采集",
+      "font_class": "dabaocaiji",
+      "unicode": "e623",
+      "unicode_decimal": 58915
+    },
+    {
+      "icon_id": "3247657",
+      "name": "跨仓移库",
+      "font_class": "kuacangyiku",
+      "unicode": "e624",
+      "unicode_decimal": 58916
+    },
+    {
+      "icon_id": "3247658",
+      "name": "理货上架",
+      "font_class": "lihuoshangjia",
+      "unicode": "e625",
+      "unicode_decimal": 58917
+    },
+    {
+      "icon_id": "3247659",
+      "name": "二次分拣",
+      "font_class": "ercifenjian",
+      "unicode": "e626",
+      "unicode_decimal": 58918
+    },
+    {
+      "icon_id": "3247660",
+      "name": "其他出库",
+      "font_class": "qitachuku",
+      "unicode": "e627",
+      "unicode_decimal": 58919
+    },
+    {
+      "icon_id": "3247661",
+      "name": "条码采集",
+      "font_class": "tiaomacaiji",
+      "unicode": "e628",
+      "unicode_decimal": 58920
+    },
+    {
+      "icon_id": "3247662",
+      "name": "上品默认库位",
+      "font_class": "shangpinmorenkuwei",
+      "unicode": "e629",
+      "unicode_decimal": 58921
+    },
+    {
+      "icon_id": "3247663",
+      "name": "其他入库",
+      "font_class": "qitaruku",
+      "unicode": "e62a",
+      "unicode_decimal": 58922
+    },
+    {
+      "icon_id": "3247664",
+      "name": "尾箱合并",
+      "font_class": "weixianghebing",
+      "unicode": "e62b",
+      "unicode_decimal": 58923
+    },
+    {
+      "icon_id": "3247665",
+      "name": "销退入库",
+      "font_class": "xiaotuiruku",
+      "unicode": "e62c",
+      "unicode_decimal": 58924
+    },
+    {
+      "icon_id": "3247666",
+      "name": "巡仓采集",
+      "font_class": "xuncangcaiji",
+      "unicode": "e62d",
+      "unicode_decimal": 58925
+    },
+    {
+      "icon_id": "3247667",
+      "name": "装车任务",
+      "font_class": "zhuangcherenwu",
+      "unicode": "e62e",
+      "unicode_decimal": 58926
+    }
+  ]
+}
