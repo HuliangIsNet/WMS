@@ -11,5 +11,6 @@
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml" />
     <ProjectReference Include="../WCS.Infrastructure/WCS.Infrastructure.csproj" />
+    <ProjectReference Include="../WCS.Module.Inventory/WCS.Module.Inventory.csproj" />
   </ItemGroup>
 </Project>
