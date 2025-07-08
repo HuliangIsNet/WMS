@@ -18,6 +18,8 @@ public partial class App : PrismApplication
     {
         containerRegistry.RegisterSingleton<WCS.Infrastructure.Interfaces.IWarehouseService, Services.MockWarehouseService>();
         containerRegistry.RegisterSingleton<WCS.Infrastructure.Interfaces.IDeviceControlService, Services.MockDeviceControlService>();
+        containerRegistry.RegisterSingleton<WCS.Infrastructure.Interfaces.ITaskService, Services.MockTaskService>();
+        containerRegistry.RegisterSingleton<WCS.Infrastructure.Interfaces.IAlertService, Services.MockAlertService>();
     }
 
     protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
@@ -25,7 +27,7 @@ public partial class App : PrismApplication
         // Example of adding modules once references are added
         moduleCatalog.AddModule<WCS.Module.Inventory.Module.InventoryModule>();
         moduleCatalog.AddModule<WCS.Module.Control.Module.ControlModule>();
-        // moduleCatalog.AddModule<WCS.Module.Monitor.MonitorModule>();
+        moduleCatalog.AddModule<WCS.Module.Monitor.Module.MonitorModule>();
         // moduleCatalog.AddModule<WCS.Module.Reports.ReportsModule>(InitializationMode.OnDemand);
     }
 }

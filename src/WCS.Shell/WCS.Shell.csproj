@@ -13,5 +13,6 @@
     <ProjectReference Include="../WCS.Infrastructure/WCS.Infrastructure.csproj" />
     <ProjectReference Include="../WCS.Module.Inventory/WCS.Module.Inventory.csproj" />
     <ProjectReference Include="../WCS.Module.Control/WCS.Module.Control.csproj" />
+    <ProjectReference Include="../WCS.Module.Monitor/WCS.Module.Monitor.csproj" />
   </ItemGroup>
 </Project>
