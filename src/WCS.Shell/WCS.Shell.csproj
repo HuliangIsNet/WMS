@@ -8,4 +8,8 @@
   <ItemGroup>
     <PackageReference Include="Prism.DryIoc.Wpf" Version="8.1.97" />
   </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml" />
+    <ProjectReference Include="../WCS.Infrastructure/WCS.Infrastructure.csproj" />
+  </ItemGroup>
 </Project>

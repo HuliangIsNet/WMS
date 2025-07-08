@@ -1,0 +1,20 @@
+<Window x:Class="WCS.Shell.Views.ShellWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:prism="http://prismlibrary.com/"
+        Title="WCS 控制台" Height="720" Width="1280"
+        prism:ViewModelLocator.AutoWireViewModel="True">
+    <DockPanel>
+        <!-- Navigation menu region -->
+        <ContentControl prism:RegionManager.RegionName="NavigationRegion"
+                        DockPanel.Dock="Left" Width="220" />
+
+        <!-- Main content region -->
+        <ContentControl prism:RegionManager.RegionName="ContentRegion" />
+
+        <!-- Status bar region / simple binding example -->
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem Content="{Binding SystemStatus}" />
+        </StatusBar>
+    </DockPanel>
+</Window>
